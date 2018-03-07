@@ -120,28 +120,12 @@ y_pred = (y_pred > 0.5)
 
 # Make a Confusion Matrix
 from sklearn.metrics import confusion_matrix
+from sklearn.metrics import classification_report
 cm = confusion_matrix(y_test, y_pred)
 cm
 
-# Calculate the accuracy of the Artificial Neural Network (ANN) Model (measures accuracy)
-# accuracy = (TP + TN) / (TP + TN + FP + FN)
-accuracy = (cm[0][0] + cm[1][1]) / (cm[0][0] + cm[1][1] + cm[0][1] + cm[1][0]) 
-accuracy
-
-# Calculate the precision of the model (measures exactness)
-# precision = TP / (TP + FP)
-precision = cm[0][0] / (cm[0][0] + cm[0][1])
-precision
-
-# Calculate the recall of the model (measures completeness)
-# recall = TP / (TP + FN)
-recall = cm[0][0] / (cm[0][0] + cm[1][0])
-recall
-
-# F1 Score (compromise between Precision and Recall)
-# F1 Score = 2 * Precision * Recall / (Precision + Recall)
-f1_score = 2 * precision * recall / (precision + recall)
-f1_score
+# Print model precision, recall, f1-score, and support metrics
+print(classification_report(y_test, y_pred))
 
 # Elapsed time in minutes
 end = timer()
@@ -240,14 +224,14 @@ def build_classifier():
                          kernel_initializer = 'uniform', 
                          activation = 'sigmoid')) # activation is the sigmoid activation function for the output layer
     classifier.compile(optimizer = 'adam', 
-                       loss = 'binary_crossentropy', 
+                       loss = 'binary_crossentropy', # handles stochastic gradient descent 
                        metrics = ['accuracy'])
     return classifier
 
 classifier = KerasClassifier(build_fn = build_classifier)
 
 parameters = {'batch_size': [25, 32],
-              'nb_epoch': [100, 500]}
+              'epochs': [100, 500]}
 
 
 
