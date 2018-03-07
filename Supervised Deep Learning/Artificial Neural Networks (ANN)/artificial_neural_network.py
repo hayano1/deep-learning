@@ -95,6 +95,12 @@ classifier.add(Dense(units = 6,
                      activation = 'relu')) # activation is the rectifier activation function for the hidden lyers
 classifier.add(Dropout(p = 0.1))
 
+# Add the third Hidden Layer
+classifier.add(Dense(units = 6, 
+                     kernel_initializer = 'uniform', 
+                     activation = 'relu')) # activation is the rectifier activation function for the hidden lyers
+classifier.add(Dropout(p = 0.1))
+
 # Add the Output Layer
 classifier.add(Dense(units = 1, 
                      kernel_initializer = 'uniform', 
@@ -171,6 +177,10 @@ def build_classifier():
                          kernel_initializer = 'uniform', 
                          activation = 'relu', 
                          input_dim = 11)) # activation is the rectifier activation function for the hidden layers
+    classifier.add(Dropout(p = 0.1))
+    classifier.add(Dense(units = 6, 
+                         kernel_initializer = 'uniform', 
+                         activation = 'relu')) # activation is the rectifier activation function for the hidden lyers
     classifier.add(Dropout(p = 0.1))
     classifier.add(Dense(units = 6, 
                          kernel_initializer = 'uniform', 
