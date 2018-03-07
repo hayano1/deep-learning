@@ -11,13 +11,16 @@ Created on Sun Feb 18 16:13:24 2018
 #%reset -f
 
 # Install Theano library in the terminal
-# pip install --upgrade --no-deps git+git://github.com/Theano/Theano.git
+# pip install theano
 
 # Install Tensorflow library in the terminal
-# Install Tensorflow from https://www.tensorflow.org/versions/r0.11/get_started/os_setup.html
+# pip install tensorflow
 
 # Install Keras library in the terminal
 # pip install --upgrade keras
+
+# Update Conda in the terminal
+# conda update --all
 
 # Part 1: Data Pre-processing
 
@@ -34,7 +37,7 @@ x = dataset.iloc[:, 3:13].values # independent variables
 y = dataset.iloc[:, 13].values # dependent variable
 
 # Encode categorical variables
-# Encode the independent categorical variables
+# Encode all independent categorical variables
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 labelencoder_x_1 = LabelEncoder()
 x[:, 1] = labelencoder_x_1.fit_transform(x[:, 1])
@@ -64,11 +67,12 @@ sc_x = StandardScaler()
 x_train = sc_x.fit_transform(x_train)
 x_test = sc_x.transform(x_test)
 
-# Create the Artificial Neural Network (ANN)
+# Part 2: Create the Artificial Neural Network (ANN)
 # Import the Keras libraries and packages
 import keras
 from keras.models import Sequential # Initializes the ANN
 from keras.layers import Dense # Builds the layers of the ANN
+from keras.layers import Dropout # Dropout regularization to reduce overfitting
 
 # Add a timer
 from timeit import default_timer as timer
@@ -77,24 +81,37 @@ start = timer()
 # Initialize the Artificial Neural Network (ANN)
 classifier = Sequential()
 
-# Add the Input Layer and the first Hidden Layer
+# Add the Input Layer and the first Hidden Layer with dropout
 # Tip: select the average number of input and output nodes as the number of nodes in the hidden layer as a quick way to determein number of nodes
-classifier.add(Dense(units = 6, kernel_initializer = 'uniform', activation = 'relu', input_dim = 11)) # activation is the rectifier activation function for the hidden layers
+classifier.add(Dense(units = 6, 
+                     kernel_initializer = 'uniform', 
+                     activation = 'relu', 
+                     input_dim = 11)) # activation is the rectifier activation function for the hidden layers
+classifier.add(Dropout(p = 0.1))
 
 # Add the second Hidden Layer
-classifier.add(Dense(units = 6, kernel_initializer = 'uniform', activation = 'relu')) # activation is the rectifier activation function for the hidden lyers
+classifier.add(Dense(units = 6, 
+                     kernel_initializer = 'uniform', 
+                     activation = 'relu')) # activation is the rectifier activation function for the hidden lyers
+classifier.add(Dropout(p = 0.1))
 
 # Add the Output Layer
-classifier.add(Dense(units = 1, kernel_initializer = 'uniform', activation = 'sigmoid')) # activation is the sigmoid activation function for the output layer
+classifier.add(Dense(units = 1, 
+                     kernel_initializer = 'uniform', 
+                     activation = 'sigmoid')) # activation is the sigmoid activation function for the output layer
 
 # Compile the Artificial Neural Network (ANN)
-classifier.compile(optimizer = 'adam', loss = 'binary_crossentropy', metrics = ['accuracy'])
+classifier.compile(optimizer = 'adam', 
+                   loss = 'binary_crossentropy', 
+                   metrics = ['accuracy'])
 
 # Fit the Artificial Neural Network (ANN) to the Training Set
-classifier.fit(x = x_train, y = y_train, batch_size = 10, epochs = 100) # Batch_size and epochs selection is part artistry
+classifier.fit(x = x_train, 
+               y = y_train, 
+               batch_size = 10, 
+               epochs = 100) # Batch_size and epochs selection is part artistry
 
 # Make predictions and and evaluate the Artificial Neural Network (ANN) Model
-
 # Predict Test set results with the Artificial Neural Network (ANN) Model
 y_pred = classifier.predict(x_test)
 
@@ -104,6 +121,7 @@ y_pred = (y_pred > 0.5)
 # Make a Confusion Matrix
 from sklearn.metrics import confusion_matrix
 cm = confusion_matrix(y_test, y_pred)
+cm
 
 # Calculate the accuracy of the Artificial Neural Network (ANN) Model (measures accuracy)
 # accuracy = (TP + TN) / (TP + TN + FP + FN)
@@ -132,4 +150,110 @@ print(0.1 * round((end - start) / 6))
 
 # Add an end of work message
 import os
-os.system('say "your program has finished"')
+os.system('say "your model has finished"')
+
+# Predict a single new observation
+""" Predict if the customer with the following characteristics will leave the bank
+Geography: France
+Credit Score: 600
+Gender: Male
+Age: 40
+Tenure: 3
+Balance: 60000
+Number of Products: 2
+Has Credit Card: Yes
+Is Active Member: Yes
+Estimated Salary: 50000
+"""
+
+new_prediction = classifier.predict(sc_x.transform(np.array([[0.0, 0, 600, 1, 40, 3, 60000, 2, 1, 1, 50000]]))) # Remember to convert categorical variables 
+new_prediction = (new_prediction > 0.5)
+new_prediction
+
+# Make a Confusion Matrix
+from sklearn.metrics import confusion_matrix
+cm = confusion_matrix(y_test, y_pred)
+cm
+
+# Part 4: Evaluating, Improving, and Tuning the ANN
+# Evaluate the ANN
+from keras.wrappers.scikit_learn import KerasClassifier # Keras classifier wrapper for scikit learn
+from sklearn.model_selection import cross_val_score # k-fold cross validation function in sklearn
+from keras.models import Sequential # Initializes the ANN
+from keras.layers import Dense # Builds the layers of the ANN
+def build_classifier():
+    classifier = Sequential()
+    classifier.add(Dense(units = 6,
+                         kernel_initializer = 'uniform', 
+                         activation = 'relu', 
+                         input_dim = 11)) # activation is the rectifier activation function for the hidden layers
+    classifier.add(Dropout(p = 0.1))
+    classifier.add(Dense(units = 6, 
+                         kernel_initializer = 'uniform', 
+                         activation = 'relu')) # activation is the rectifier activation function for the hidden lyers
+    classifier.add(Dropout(p = 0.1))
+    classifier.add(Dense(units = 1, 
+                         kernel_initializer = 'uniform', 
+                         activation = 'sigmoid')) # activation is the sigmoid activation function for the output layer
+    classifier.compile(optimizer = 'adam', 
+                       loss = 'binary_crossentropy', 
+                       metrics = ['accuracy'])
+    return classifier
+
+classifier = KerasClassifier(build_fn = build_classifier,
+                             batch_size = 10,
+                             epochs = 100)
+
+accuracies = cross_val_score(estimator = classifier,
+                             X = x_train,
+                             y = y_train,
+                             cv = 10, # cv = number of folds
+                             n_jobs = -1) # -1 uses all available cpus in parallel
+
+mean = accuracies.mean()
+mean
+
+variance = accuracies.std()
+variance
+
+# Improve the ANN
+# Dropout regularization to reduce overfitting if needed (added above)
+
+# Tune the ANN hyperparameters
+# Grid Search recommends optimum hyperparameter configuration
+from keras.wrappers.scikit_learn import KerasClassifier # Keras classifier wrapper for scikit learn
+from sklearn.model_selection import GridSearchCV # grid search hyperparameter tuning function in sklearn
+from keras.models import Sequential # Initializes the ANN
+from keras.layers import Dense # Builds the layers of the ANN
+def build_classifier():
+    classifier = Sequential()
+    classifier.add(Dense(units = 6,
+                         kernel_initializer = 'uniform', 
+                         activation = 'relu', 
+                         input_dim = 11)) # activation is the rectifier activation function for the hidden layers
+    classifier.add(Dropout(p = 0.1))
+    classifier.add(Dense(units = 6, 
+                         kernel_initializer = 'uniform', 
+                         activation = 'relu')) # activation is the rectifier activation function for the hidden lyers
+    classifier.add(Dropout(p = 0.1))
+    classifier.add(Dense(units = 1, 
+                         kernel_initializer = 'uniform', 
+                         activation = 'sigmoid')) # activation is the sigmoid activation function for the output layer
+    classifier.compile(optimizer = 'adam', 
+                       loss = 'binary_crossentropy', 
+                       metrics = ['accuracy'])
+    return classifier
+
+classifier = KerasClassifier(build_fn = build_classifier)
+
+parameters = {'batch_size': [25, 32],
+              'nb_epoch': [100, 500]}
+
+
+
+
+
+
+
+
+
