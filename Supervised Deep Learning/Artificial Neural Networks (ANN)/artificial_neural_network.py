@@ -260,7 +260,47 @@ best_accuracy = grid_search.best_score_
 # best_accuracy
 # Out[4]: 0.856125
 
+# Tune the ANN hyperparameters v2
+# Grid Search recommends optimum hyperparameter configuration
+from keras.wrappers.scikit_learn import KerasClassifier # Keras classifier wrapper for scikit learn
+from sklearn.model_selection import GridSearchCV # grid search hyperparameter tuning function in sklearn
+from keras.models import Sequential # Initializes the ANN
+from keras.layers import Dense # Builds the layers of the ANN
+def build_classifier(optimizer):
+    classifier = Sequential()
+    classifier.add(Dense(units = 6,
+                         kernel_initializer = 'uniform', 
+                         activation = 'relu', 
+                         input_dim = 11)) # activation is the rectifier activation function for the hidden layers
+    classifier.add(Dense(units = 6, 
+                         kernel_initializer = 'uniform', 
+                         activation = 'relu')) # activation is the rectifier activation function for the hidden lyers
+    classifier.add(Dense(units = 6, 
+                         kernel_initializer = 'uniform', 
+                         activation = 'relu')) # activation is the rectifier activation function for the hidden lyers
+    classifier.add(Dense(units = 1, 
+                         kernel_initializer = 'uniform', 
+                         activation = 'sigmoid')) # activation is the sigmoid activation function for the output layer
+    classifier.compile(optimizer = optimizer, 
+                       loss = 'binary_crossentropy', # handles stochastic gradient descent 
+                       metrics = ['accuracy'])
+    return classifier
 
+classifier = KerasClassifier(build_fn = build_classifier)
+
+parameters = {'batch_size': [25, 32],
+              'epochs': [100, 500],
+              'optimizer': ['adam', 'rmsprop', 'sgd']}
+
+grid_search = GridSearchCV(estimator = classifier,
+                           param_grid = parameters,
+                           scoring = 'accuracy',
+                           cv = 10)
+
+grid_search = grid_search.fit(x_train, y_train)
+
+best_parameters = grid_search.best_params_
+best_accuracy = grid_search.best_score_
 
 
 
