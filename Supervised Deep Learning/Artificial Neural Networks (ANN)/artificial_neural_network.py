@@ -262,6 +262,10 @@ best_accuracy = grid_search.best_score_
 
 # Tune the ANN hyperparameters v2 - three hidden layers and no Dropout 
 # Grid Search recommends optimum hyperparameter configuration
+# Add a timer
+from timeit import default_timer as timer
+start = timer()
+
 from keras.wrappers.scikit_learn import KerasClassifier # Keras classifier wrapper for scikit learn
 from sklearn.model_selection import GridSearchCV # grid search hyperparameter tuning function in sklearn
 from keras.models import Sequential # Initializes the ANN
@@ -302,7 +306,10 @@ grid_search = grid_search.fit(x_train, y_train)
 best_parameters = grid_search.best_params_
 best_accuracy = grid_search.best_score_
 
-
+# Elapsed time in minutes
+end = timer()
+print('Elapsed time in minutes: ')
+print(0.1 * round((end - start) / 6))
 
 
 
