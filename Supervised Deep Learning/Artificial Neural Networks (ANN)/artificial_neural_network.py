@@ -219,7 +219,7 @@ from keras.wrappers.scikit_learn import KerasClassifier # Keras classifier wrapp
 from sklearn.model_selection import GridSearchCV # grid search hyperparameter tuning function in sklearn
 from keras.models import Sequential # Initializes the ANN
 from keras.layers import Dense # Builds the layers of the ANN
-def build_classifier():
+def build_classifier(optimizer):
     classifier = Sequential()
     classifier.add(Dense(units = 6,
                          kernel_initializer = 'uniform', 
@@ -233,7 +233,7 @@ def build_classifier():
     classifier.add(Dense(units = 1, 
                          kernel_initializer = 'uniform', 
                          activation = 'sigmoid')) # activation is the sigmoid activation function for the output layer
-    classifier.compile(optimizer = 'adam', 
+    classifier.compile(optimizer = optimizer, 
                        loss = 'binary_crossentropy', # handles stochastic gradient descent 
                        metrics = ['accuracy'])
     return classifier
@@ -241,8 +241,24 @@ def build_classifier():
 classifier = KerasClassifier(build_fn = build_classifier)
 
 parameters = {'batch_size': [25, 32],
-              'epochs': [100, 500]}
+              'epochs': [100, 500],
+              'optimizer': ['adam', 'rmsprop', 'sgd']}
 
+grid_search = GridSearchCV(estimator = classifier,
+                           param_grid = parameters,
+                           scoring = 'accuracy',
+                           cv = 10)
+
+grid_search = grid_search.fit(x_train, y_train)
+
+best_parameters = grid_search.best_params_
+best_accuracy = grid_search.best_score_
+
+# best_parameters
+# Out[3]: {'batch_size': 25, 'epochs': 500, 'optimizer': 'sgd'}
+
+# best_accuracy
+# Out[4]: 0.856125
 
 
 
