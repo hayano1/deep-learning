@@ -260,7 +260,7 @@ best_accuracy = grid_search.best_score_
 # best_accuracy
 # Out[4]: 0.856125
 
-# Tune the ANN hyperparameters v2
+# Tune the ANN hyperparameters v2 - three hidden layers and no Dropout 
 # Grid Search recommends optimum hyperparameter configuration
 from keras.wrappers.scikit_learn import KerasClassifier # Keras classifier wrapper for scikit learn
 from sklearn.model_selection import GridSearchCV # grid search hyperparameter tuning function in sklearn
