@@ -43,8 +43,7 @@ classifier = Sequential()
 
 # Step 1: Add the Convolutional Layer
 # Apply Feature Detectors to Input Image = Feature Map
-classifier.add(Convolution2D(32, 
-                             (3, 3), 
+classifier.add(Convolution2D(32, (3, 3), 
                              padding = 'same', 
                              input_shape = (64, 64, 3), 
                              activation = 'relu'))
@@ -54,9 +53,18 @@ classifier.add(MaxPooling2D(pool_size = (2, 2)))
 
 # Add a 2nd Convolutional Layer to improve accuracy and performance results
 classifier.add(Convolution2D(32, (3, 3), 
+                             padding = 'same',
                              activation = 'relu'))
 
 # Apply Max Pooling to the 2nd Convolutional Layer
+classifier.add(MaxPooling2D(pool_size = (2, 2)))
+
+# Add a 3rd Convolutional Layer to improve accuracy and performance results
+classifier.add(Convolution2D(64, (3, 3), 
+                             padding = 'same',
+                             activation = 'relu'))
+
+# Apply Max Pooling to the 3rd Convolutional Layer
 classifier.add(MaxPooling2D(pool_size = (2, 2)))
 
 # Step 3: Flatten the CNN
@@ -72,7 +80,7 @@ classifier.add(Dense(units = 128,
 # Add a second Full Connection Hidden Layer to increase accuracy and performance results
 #classifier.add(Dense(units = 64, 
 #                     kernel_initializer = 'uniform', 
-#                     activation = 'relu')) # activation is the rectifier activation function for the hidden lyers
+#                     activation = 'relu')) # activation is the rectifier activation function for the hidden layers
 
 # Add the Output Layer
 classifier.add(Dense(units = 1, 
