@@ -29,7 +29,14 @@ sc = MinMaxScaler(feature_range = (0, 1),
 training_set_scaled = sc.fit_transform(training_set)
 
 # Create a data structure with 60 timesteps and 1 output (use the previous 60 days' stock prices to predict the next output = 3 months of prices)
+x_train = []
+y_train = []
 
+for i in range(60, 1258): # gives last 60 days, upper bound is the last record in the training_set
+    x_train.append(training_set_scaled[i-60:i, 0]) # append the previous 60 days' stock prices
+    y_train.append(training_set_scaled[i, 0]) # predict the stock price on the next day
+
+x_train, y_train = np.array(x_train), np.array(y_train)
 
 # Part 2: Build the Recurrent Neural Network (RNN) Model
 
