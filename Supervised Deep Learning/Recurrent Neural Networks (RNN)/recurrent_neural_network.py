@@ -75,14 +75,11 @@ regressor.add(LSTM(units = 50, # number of memory cells (neurons) in this layer
 regressor.add(Dropout(rate = 0.2))
 
 # Add a 4th (and last) LSTM layer with Dropout regularization
-regressor.add(LSTM(units = 50, # number of memory cells (neurons) in this layer
-                   return_sequences = False))
+regressor.add(LSTM(units = 50)) # number of memory cells (neurons) in this layer
 regressor.add(Dropout(rate = 0.2))
 
 # Add the output layer
-regressor.add(Dense(units = 1,
-                    kernel_initializer = 'uniform', 
-                    activation = 'sigmoid')) # activation is the sigmoid activation function for the output layer
+regressor.add(Dense(units = 1))
 
 # Compile the Recurrent Neural Network (RNN)
 regressor.compile(optimizer = 'adam',
@@ -110,7 +107,32 @@ os.system('say "your model has finished processing"')
 dataset_test = pd.read_csv('Google_Stock_Price_Test.csv')
 real_stock_price = dataset_test.iloc[:, 1:2].values 
 
-# Get the predicted Google stock prices for Jan 2017
+# Get the predicted Google open stock prices for Jan 2017
+dataset_total = pd.concat((dataset_train['Open'], dataset_test['Open']), axis = 0)
+inputs = dataset_total[len(dataset_total) - len(dataset_test) - 60:].values # first financial day of Jan 2017 is the difference between the length of the dataset_total and dataset_test
+inputs = inputs.reshape(-1, 1)
+inputs = sc.transform(inputs) # Scale the inputs
 
+x_test = []
+for i in range(60, 80): # gives last 20 financial days
+    x_test.append(inputs[i-60:i, 0]) # append the previous 60 days' stock prices
+
+x_test = np.array(x_test)
+x_test = np.reshape(x_test, (x_test.shape[0], x_test.shape[1], 1))
+predicted_stock_price = regressor.predict(x_test)
+
+# Invert the feature scaling
+predicted_stock_price = sc.inverse_transform(predicted_stock_price)
 
 # Visualize the results
+plt.plot(real_stock_price,
+         color = 'red',
+         label = 'Real Google Stock Price (Jan 2017)')
+plt.plot(predicted_stock_price,
+         color = 'blue',
+         label = 'Predicted Google Stock Price (Jan 2017)')
+plt.title('Google Stock Price Prediction')
+plt.xlabel('Date')
+plt.ylabel('Stock Price')
+plt.legend()
+plt.show()
