@@ -39,13 +39,54 @@ for i in range(60, 1258): # gives last 60 days, upper bound is the last record i
 x_train, y_train = np.array(x_train), np.array(y_train)
 
 # Reshape the data to add additional indicators (e.g. volume, closing price, etc.)
-x_train = np.reshape(x_train, (batch_size = x_train.shape[0], # number of rows in x_train
-                               timesteps = x_train.shape[1], # number of columns in x_train
-                               input_dim = 1))
+x_train = np.reshape(x_train, (x_train.shape[0], # number of rows in x_train
+                               x_train.shape[1], # number of columns in x_train
+                               1)) # number of input layers (currently only opening price)
 
 # Part 2: Build the Recurrent Neural Network (RNN) Model
 
+# Import the required Keras libraries and packages
+from keras.models import Sequential # Initializes the Neural Network
+from keras.layers import Dense # Builds the layers of the Neural Network
+from keras.layers import LSTM # Long Short Term Memory
+from keras.layers import Dropout # Dropout regularization to reduce overfitting
 
+# Add a timer
+from timeit import default_timer as timer
+start = timer()
+
+# Initialize the RNN
+regressor = Sequential()
+
+# Add the 1st LSTM layer and Dropout regularization
+regressor.add(LSTM(units = 50, # number of memory cells (neurons) in this layer
+                   return_sequences = True,
+                   input_shape = (x_train.shape[1], 1)))
+regressor.add(Dropout(rate = 0.2))
+
+# Add a 2nd LSTM layer and Dropout regularization
+regressor.add(LSTM(units = 50, # number of memory cells (neurons) in this layer
+                   return_sequences = True))
+regressor.add(Dropout(rate = 0.2))
+
+# Add a 3rd LSTM layer and Dropout regularization
+regressor.add(LSTM(units = 50, # number of memory cells (neurons) in this layer
+                   return_sequences = True))
+regressor.add(Dropout(rate = 0.2))
+
+# Add a 4th LSTM layer and Dropout regularization
+regressor.add(LSTM(units = 50, # number of memory cells (neurons) in this layer
+                   return_sequences = True))
+regressor.add(Dropout(rate = 0.2))
+
+# Elapsed time in minutes
+end = timer()
+print('Elapsed time in minutes: ')
+print(0.1 * round((end - start) / 6))
+
+# Add an end of work message
+import os
+os.system('say "your model has finished"')
 
 # Part 3: Make Prediction and Visualize the Results
 
