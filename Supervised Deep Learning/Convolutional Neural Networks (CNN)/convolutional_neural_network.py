@@ -45,7 +45,7 @@ classifier = Sequential()
 # Apply Feature Detectors to Input Image = Feature Map
 classifier.add(Convolution2D(32, (3, 3), 
                              padding = 'same', 
-                             input_shape = (64, 64, 3), 
+                             input_shape = (128, 128, 3), 
                              activation = 'relu'))
 
 # Step 2: Apply Max Pooling to the CNN
@@ -105,12 +105,12 @@ train_datagen = ImageDataGenerator(
 test_datagen = ImageDataGenerator(rescale = 1./255)
 
 training_set = train_datagen.flow_from_directory('cnn_dataset/training_set',
-                                                 target_size = (64, 64),
+                                                 target_size = (128, 128),
                                                  batch_size = 32,
                                                  class_mode = 'binary')
 
 test_set = test_datagen.flow_from_directory('cnn_dataset/test_set',
-                                            target_size = (64, 64),
+                                            target_size = (128, 128),
                                             batch_size = 32,
                                             class_mode = 'binary')
 
@@ -131,60 +131,78 @@ os.system('say "your program has finished"')
 
 # Results 
 # =============================================================================
-# =============================================================================
-# Using TensorFlow backend.
-# Found 8000 images belonging to 2 classes.
-# Found 2000 images belonging to 2 classes.
-# Epoch 1/25
-# 8000/8000 [==============================] - 2449s 306ms/step - loss: 0.3935 - acc: 0.8109 - val_loss: 0.6193 - val_acc: 0.7751
-# Epoch 2/25
-# 8000/8000 [==============================] - 2461s 308ms/step - loss: 0.1214 - acc: 0.9538 - val_loss: 0.9379 - val_acc: 0.7992
-# Epoch 3/25
-# 8000/8000 [==============================] - 2464s 308ms/step - loss: 0.0587 - acc: 0.9791 - val_loss: 1.2442 - val_acc: 0.7825
-# Epoch 4/25
-# 8000/8000 [==============================] - 2462s 308ms/step - loss: 0.0398 - acc: 0.9859 - val_loss: 1.3576 - val_acc: 0.7843
-# Epoch 5/25
-# 8000/8000 [==============================] - 2435s 304ms/step - loss: 0.0328 - acc: 0.9888 - val_loss: 1.3713 - val_acc: 0.7795
-# Epoch 6/25
-# 8000/8000 [==============================] - 2456s 307ms/step - loss: 0.0270 - acc: 0.9910 - val_loss: 1.4536 - val_acc: 0.7753
-# Epoch 7/25
-# 8000/8000 [==============================] - 2441s 305ms/step - loss: 0.0234 - acc: 0.9923 - val_loss: 1.5741 - val_acc: 0.7851
-# Epoch 8/25
-# 8000/8000 [==============================] - 2439s 305ms/step - loss: 0.0209 - acc: 0.9935 - val_loss: 1.5551 - val_acc: 0.7865
-# Epoch 9/25
-# 8000/8000 [==============================] - 2427s 303ms/step - loss: 0.0189 - acc: 0.9939 - val_loss: 1.6450 - val_acc: 0.7739
-# Epoch 10/25
-# 8000/8000 [==============================] - 2397s 300ms/step - loss: 0.0171 - acc: 0.9945 - val_loss: 1.6073 - val_acc: 0.7804
-# Epoch 11/25
-# 8000/8000 [==============================] - 2433s 304ms/step - loss: 0.0145 - acc: 0.9953 - val_loss: 1.6377 - val_acc: 0.7886
-# Epoch 12/25
-# 8000/8000 [==============================] - 2386s 298ms/step - loss: 0.0137 - acc: 0.9956 - val_loss: 1.6775 - val_acc: 0.7853
-# Epoch 13/25
-# 8000/8000 [==============================] - 2460s 308ms/step - loss: 0.0131 - acc: 0.9957 - val_loss: 1.6811 - val_acc: 0.7858
-# Epoch 14/25
-# 8000/8000 [==============================] - 2433s 304ms/step - loss: 0.0119 - acc: 0.9963 - val_loss: 1.6190 - val_acc: 0.7821
-# Epoch 15/25
-# 8000/8000 [==============================] - 2432s 304ms/step - loss: 0.0124 - acc: 0.9963 - val_loss: 1.6974 - val_acc: 0.7805
-# Epoch 16/25
-# 8000/8000 [==============================] - 2421s 303ms/step - loss: 0.0118 - acc: 0.9965 - val_loss: 1.6775 - val_acc: 0.7866
-# Epoch 17/25
-# 8000/8000 [==============================] - 2426s 303ms/step - loss: 0.0105 - acc: 0.9969 - val_loss: 1.7370 - val_acc: 0.7903
-# Epoch 18/25
-# 8000/8000 [==============================] - 2421s 303ms/step - loss: 0.0111 - acc: 0.9966 - val_loss: 1.7607 - val_acc: 0.7818
-# Epoch 19/25
-# 8000/8000 [==============================] - 2436s 304ms/step - loss: 0.0099 - acc: 0.9970 - val_loss: 1.8596 - val_acc: 0.7821
-# Epoch 20/25
-# 8000/8000 [==============================] - 2418s 302ms/step - loss: 0.0098 - acc: 0.9971 - val_loss: 1.7806 - val_acc: 0.7919
-# Epoch 21/25
-# 8000/8000 [==============================] - 2421s 303ms/step - loss: 0.0094 - acc: 0.9972 - val_loss: 1.8604 - val_acc: 0.7772
-# Epoch 22/25
-# 8000/8000 [==============================] - 2421s 303ms/step - loss: 0.0082 - acc: 0.9974 - val_loss: 1.7844 - val_acc: 0.7941
-# Epoch 23/25
-# 8000/8000 [==============================] - 2437s 305ms/step - loss: 0.0084 - acc: 0.9975 - val_loss: 1.9289 - val_acc: 0.7868
-# Epoch 24/25
-# 8000/8000 [==============================] - 2465s 308ms/step - loss: 0.0088 - acc: 0.9974 - val_loss: 1.9441 - val_acc: 0.7934
-# Epoch 25/25
-# 8000/8000 [==============================] - 2465s 308ms/step - loss: 0.0077 - acc: 0.9978 - val_loss: 1.9185 - val_acc: 0.7882
-# Out[1]: <keras.callbacks.History at 0x1825331b70>
-# =============================================================================
-# =============================================================================
+'''
+Epoch 1/25
+8000/8000 [==============================] - 8209s 1s/step - loss: 0.3101 - acc: 0.8570 - val_loss: 0.5589 - val_acc: 0.8440
+Epoch 2/25
+8000/8000 [==============================] - 8254s 1s/step - loss: 0.0793 - acc: 0.9709 - val_loss: 0.7584 - val_acc: 0.8393
+Epoch 3/25
+8000/8000 [==============================] - 8047s 1s/step - loss: 0.0410 - acc: 0.9859 - val_loss: 0.9707 - val_acc: 0.8429
+Epoch 4/25
+8000/8000 [==============================] - 8020s 1s/step - loss: 0.0290 - acc: 0.9902 - val_loss: 0.9424 - val_acc: 0.8470
+Epoch 5/25
+8000/8000 [==============================] - 8020s 1s/step - loss: 0.0236 - acc: 0.9924 - val_loss: 1.0720 - val_acc: 0.8360
+Epoch 6/25
+8000/8000 [==============================] - 8021s 1s/step - loss: 0.0200 - acc: 0.9935 - val_loss: 1.0179 - val_acc: 0.8359
+Epoch 7/25
+8000/8000 [==============================] - 8042s 1s/step - loss: 0.0167 - acc: 0.9946 - val_loss: 1.0515 - val_acc: 0.8400
+Epoch 8/25
+8000/8000 [==============================] - 8107s 1s/step - loss: 0.0147 - acc: 0.9955 - val_loss: 1.1569 - val_acc: 0.8280
+Epoch 9/25
+8000/8000 [==============================] - 8064s 1s/step - loss: 0.0144 - acc: 0.9956 - val_loss: 1.1177 - val_acc: 0.8445
+Epoch 10/25
+8000/8000 [==============================] - 8023s 1s/step - loss: 0.0130 - acc: 0.9958 - val_loss: 1.1270 - val_acc: 0.8423
+Epoch 11/25
+8000/8000 [==============================] - 8019s 1s/step - loss: 0.0125 - acc: 0.9962 - val_loss: 1.1919 - val_acc: 0.8479
+Epoch 12/25
+8000/8000 [==============================] - 8057s 1s/step - loss: 0.0115 - acc: 0.9965 - val_loss: 1.2285 - val_acc: 0.8492
+Epoch 13/25
+8000/8000 [==============================] - 8029s 1s/step - loss: 0.0119 - acc: 0.9965 - val_loss: 1.1494 - val_acc: 0.8510
+Epoch 14/25
+8000/8000 [==============================] - 7981s 998ms/step - loss: 0.0111 - acc: 0.9968 - val_loss: 1.2161 - val_acc: 0.8483
+Epoch 15/25
+8000/8000 [==============================] - 7967s 996ms/step - loss: 0.0111 - acc: 0.9970 - val_loss: 1.3651 - val_acc: 0.8569
+Epoch 16/25
+8000/8000 [==============================] - 7970s 996ms/step - loss: 0.0117 - acc: 0.9968 - val_loss: 1.3811 - val_acc: 0.8479
+Epoch 17/25
+8000/8000 [==============================] - 7973s 997ms/step - loss: 0.0113 - acc: 0.9969 - val_loss: 1.4357 - val_acc: 0.8440
+Epoch 18/25
+8000/8000 [==============================] - 7965s 996ms/step - loss: 0.0112 - acc: 0.9972 - val_loss: 1.3357 - val_acc: 0.8469
+Epoch 19/25
+8000/8000 [==============================] - 7963s 995ms/step - loss: 0.0114 - acc: 0.9971 - val_loss: 1.4432 - val_acc: 0.8403
+Epoch 20/25
+8000/8000 [==============================] - 7962s 995ms/step - loss: 0.0111 - acc: 0.9973 - val_loss: 1.5387 - val_acc: 0.8430
+Epoch 21/25
+8000/8000 [==============================] - 7971s 996ms/step - loss: 0.0102 - acc: 0.9973 - val_loss: 1.4371 - val_acc: 0.8544
+Epoch 22/25
+8000/8000 [==============================] - 8015s 1s/step - loss: 0.0118 - acc: 0.9973 - val_loss: 1.6304 - val_acc: 0.8418
+Epoch 23/25
+8000/8000 [==============================] - 8022s 1s/step - loss: 0.0110 - acc: 0.9975 - val_loss: 1.4144 - val_acc: 0.8549
+Epoch 24/25
+8000/8000 [==============================] - 7995s 999ms/step - loss: 0.0121 - acc: 0.9974 - val_loss: 1.6801 - val_acc: 0.8354
+Epoch 25/25
+8000/8000 [==============================] - 7984s 998ms/step - loss: 0.0124 - acc: 0.9973 - val_loss: 1.6786 - val_acc: 0.8259
+Elapsed time in minutes: 
+3344.9
+---
+'''
+
+# Part 3: Make predictions based on the model
+import numpy as np
+from keras.preprocessing import image
+
+test_image = image.load_img('cnn_dataset/single_prediction/cat_or_dog_2.jpeg', 
+                              target_size = (128, 128))
+test_image = image.img_to_array(test_image)
+test_image = np.expand_dims(test_image, 0) # add 4th dimension (batch size) so that ANN can process
+
+result = classifier.predict(test_image)
+
+training_set.class_indices
+
+if result[0][0] == 1:
+    prediction = 'dog'
+else:
+    prediction = 'cat'
+
+prediction
