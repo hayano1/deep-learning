@@ -19,7 +19,7 @@ import pandas as pd
 
 # Import the training set
 dataset_train = pd.read_csv('Google_Stock_Price_Train.csv')
-training_set = dataset_train.iloc[:, 1:2].values # crease a numpy array of 1 column that we care about - Google Stock Price
+training_set = dataset_train.iloc[:, 1:2].values # create a numpy array of 1 column that we care about - Google Stock Price
 
 # Feature Scaling
 # With RNNs it is recommended to apply normalization for feature scaling
@@ -58,26 +58,41 @@ start = timer()
 # Initialize the RNN
 regressor = Sequential()
 
-# Add the 1st LSTM layer and Dropout regularization
+# Add the 1st LSTM layer with Dropout regularization
 regressor.add(LSTM(units = 50, # number of memory cells (neurons) in this layer
                    return_sequences = True,
                    input_shape = (x_train.shape[1], 1)))
 regressor.add(Dropout(rate = 0.2))
 
-# Add a 2nd LSTM layer and Dropout regularization
+# Add a 2nd LSTM layer with Dropout regularization
 regressor.add(LSTM(units = 50, # number of memory cells (neurons) in this layer
                    return_sequences = True))
 regressor.add(Dropout(rate = 0.2))
 
-# Add a 3rd LSTM layer and Dropout regularization
+# Add a 3rd LSTM layer with Dropout regularization
 regressor.add(LSTM(units = 50, # number of memory cells (neurons) in this layer
                    return_sequences = True))
 regressor.add(Dropout(rate = 0.2))
 
-# Add a 4th LSTM layer and Dropout regularization
+# Add a 4th (and last) LSTM layer with Dropout regularization
 regressor.add(LSTM(units = 50, # number of memory cells (neurons) in this layer
-                   return_sequences = True))
+                   return_sequences = False))
 regressor.add(Dropout(rate = 0.2))
+
+# Add the output layer
+regressor.add(Dense(units = 1,
+                    kernel_initializer = 'uniform', 
+                    activation = 'sigmoid')) # activation is the sigmoid activation function for the output layer
+
+# Compile the Recurrent Neural Network (RNN)
+regressor.compile(optimizer = 'adam',
+                  loss = 'mean_squared_error')
+
+# Fit the Recurrent Neural Network (RNN) to the Training Set
+regressor.fit(x = x_train,
+              y = y_train,
+              batch_size = 32,
+              epochs = 100) # Batch_size and epochs selection is part artistry
 
 # Elapsed time in minutes
 end = timer()
@@ -86,7 +101,16 @@ print(0.1 * round((end - start) / 6))
 
 # Add an end of work message
 import os
-os.system('say "your model has finished"')
+os.system('say "your model has finished processing"')
 
 # Part 3: Make Prediction and Visualize the Results
 
+# Get the real Google stock prices for Jan 2017
+# Import the test set
+dataset_test = pd.read_csv('Google_Stock_Price_Test.csv')
+real_stock_price = dataset_test.iloc[:, 1:2].values 
+
+# Get the predicted Google stock prices for Jan 2017
+
+
+# Visualize the results
