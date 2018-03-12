@@ -132,7 +132,7 @@ plt.plot(predicted_stock_price,
          color = 'blue',
          label = 'Predicted Google Stock Price (Jan 2017)')
 plt.title('Google Stock Price Prediction')
-plt.xlabel('Date')
+plt.xlabel('Time')
 plt.ylabel('Stock Price')
 plt.legend()
 plt.show()
