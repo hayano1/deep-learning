@@ -28,6 +28,9 @@ sc = MinMaxScaler(feature_range = (0, 1),
                   copy = True)
 training_set_scaled = sc.fit_transform(training_set)
 
+# Create a data structure with 60 timesteps and 1 output (use the previous 60 days' stock prices to predict the next output = 3 months of prices)
+
+
 # Part 2: Build the Recurrent Neural Network (RNN) Model
 
 
