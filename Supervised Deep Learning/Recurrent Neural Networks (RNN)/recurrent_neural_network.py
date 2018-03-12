@@ -39,7 +39,9 @@ for i in range(60, 1258): # gives last 60 days, upper bound is the last record i
 x_train, y_train = np.array(x_train), np.array(y_train)
 
 # Reshape the data to add additional indicators (e.g. volume, closing price, etc.)
-x_train = np.reshape(x_train, (batch_size = , timesteps = 60, input_dim = ))
+x_train = np.reshape(x_train, (batch_size = x_train.shape[0], # number of rows in x_train
+                               timesteps = x_train.shape[1], # number of columns in x_train
+                               input_dim = 1))
 
 # Part 2: Build the Recurrent Neural Network (RNN) Model
 
