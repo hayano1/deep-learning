@@ -21,6 +21,12 @@ import pandas as pd
 dataset_train = pd.read_csv('Google_Stock_Price_Train.csv')
 training_set = dataset_train.iloc[:, 1:2].values # crease a numpy array of 1 column that we care about - Google Stock Price
 
+# Feature Scaling
+# With RNNs it is recommended to apply normalization for feature scaling
+from sklearn.preprocessing import MinMaxScaler
+sc = MinMaxScaler(feature_range = (0, 1),
+                  copy = True)
+training_set_scaled = sc.fit_transform(training_set)
 
 # Part 2: Build the Recurrent Neural Network (RNN) Model
 
