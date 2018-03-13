@@ -186,3 +186,4 @@ os.system('say "your model has finished"')
 # Make predictions and evaluate the Artificial Neural Network (ANN) Model
 # Predict the probability of fraud
 y_pred = classifier.predict(customers)
+y_pred = np.concatenate((dataset.iloc[:, 0:1].values, y_pred), axis = 1)
