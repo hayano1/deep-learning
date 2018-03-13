@@ -59,3 +59,27 @@ sc = MinMaxScaler(feature_range = (0,1))
 x = sc.fit_transform(x)
 
 # Train the Self Organizing Map (SOM) Model
+
+# Steps to Train a Self Organizing Map
+# Step 1: Start with a dataset composed of n_features independent variables
+# Step 2: Create a grid composed of nodes, each having a weight vector of n_features elements
+# Step 3: Randomly initialize the values of the weight vectors to small numbers close to 0 (but not 0)
+# Step 4: Select one random observation point from the dataset
+# Step 5: Compute the Euclidean distances from this point to the different neurons in the network
+# Step 6: Select the neuron that has the minimum distance to the point. This neuron is called the winning node
+# Step 7: Update the weights of the winning node to move it closer to the point
+# Step 8: Using a Gaussian neighbourhood function of mean the winning node, also update the weights of the winning node neighbours to move them closer to the point. The neighbourhood radius is the sigma in the Gaussian function
+# Step 9: Repeat Steps 1-5 and update the weights after each observation (Reinforcement Learning) or after a batch of observations (Batch Learning), until the network converges to a point where the neighbourhood stops decreasing
+
+# pip install minisom
+from minisom import MiniSom
+som = MiniSom(x = 10, 
+              y = 10,
+              input_len = len(x) + len(y),
+              sigma = 1.0,
+              learning_rate = 0.5,
+              decay_function = None,
+              neighborhood_function = 'gaussian',
+              random_seed = None)
+
+
