@@ -123,3 +123,66 @@ is_fraud = np.zeros(len(dataset))
 for i in range(len(dataset)):
     if dataset.iloc[i, 0] in potential_fraud:
         is_fraud[i] = 1 # set is_fraud to 1
+
+# Feature scaling (required for neural networks)
+# Standardization - x_stand = (x - mean(x)) / standard deviation (x)
+# Normalization - x_norm = (x - min(x)) / (max(x) - min(x))
+from sklearn.preprocessing import StandardScaler
+sc = StandardScaler()
+customers = sc.fit_transform(customers)
+
+# Import the Keras libraries and packages
+import keras
+from keras.models import Sequential # Initializes the ANN
+from keras.layers import Dense # Builds the layers of the ANN
+from keras.layers import Dropout # Dropout regularization to reduce overfitting
+
+# Add a timer
+from timeit import default_timer as timer
+start = timer()
+
+# Initialize the Artificial Neural Network (ANN)
+classifier = Sequential()
+
+# Add the Input Layer and the first Hidden Layer with dropout
+# Tip: select the average number of input and output nodes as the number of nodes in the hidden layer as a quick way to determein number of nodes
+classifier.add(Dense(units = 2, 
+                     kernel_initializer = 'uniform', 
+                     activation = 'relu', 
+                     input_dim = 15)) # activation is the rectifier activation function for the hidden layers
+classifier.add(Dropout(rate = 0.1))
+
+# Add the second Hidden Layer
+classifier.add(Dense(units = 2, 
+                     kernel_initializer = 'uniform', 
+                     activation = 'relu')) # activation is the rectifier activation function for the hidden lyers
+classifier.add(Dropout(rate = 0.1))
+
+# Add the Output Layer
+classifier.add(Dense(units = 1, 
+                     kernel_initializer = 'uniform', 
+                     activation = 'sigmoid')) # activation is the sigmoid activation function for the output layer
+
+# Compile the Artificial Neural Network (ANN)
+classifier.compile(optimizer = 'adam', 
+                   loss = 'binary_crossentropy', 
+                   metrics = ['accuracy'])
+
+# Fit the Artificial Neural Network (ANN) to the Training Set
+classifier.fit(x = customers, 
+               y = is_fraud, 
+               batch_size = 1, 
+               epochs = 2) # Batch_size and epochs selection is part artistry
+
+# Elapsed time in minutes
+end = timer()
+print('Elapsed time in minutes: ')
+print(0.1 * round((end - start) / 6))
+
+# Add an end of work message
+import os
+os.system('say "your model has finished"')
+
+# Make predictions and evaluate the Artificial Neural Network (ANN) Model
+# Predict the probability of fraud
+y_pred = classifier.predict(customers)
