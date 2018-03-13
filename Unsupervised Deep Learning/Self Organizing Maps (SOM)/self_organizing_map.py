@@ -94,7 +94,7 @@ colorbar() # Add a Legend
 markers = ['o', 's'] # Add markers to identify those that were approved / not approved
 colors = ['r', 'g'] # Add colors to identify those that were approved / not approved
 for i, j  in enumerate(x):
-    w = som.winner(x) # Identify the winning node
+    w = som.winner(j) # Identify the winning node
     plot(w[0] + 0.5,
          w[1] + 0.5,
          markers[y[i]],
@@ -103,3 +103,8 @@ for i, j  in enumerate(x):
          markersize = 10,
          markeredgewidth = 2) # Add the marker to the center of the square of the winning node
 show()
+
+# Identify the potentially fraudulent applications
+mappings = som.win_map(x) # Create a dictionary of mappings
+fraud = mappings[(4, 4)] # Select the matrix locations for fraud from visualization above (all the white squares)
+
