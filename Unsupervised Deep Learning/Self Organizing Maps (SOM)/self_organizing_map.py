@@ -86,4 +86,17 @@ som.train_random(data = x,
                  num_iteration = 100)
 
 # Visualize the results to identify the outlying neurons in the Self Organizing Map (SOM)
-plt.plot()
+from pylab import bone, pcolor, colorbar, plot, show
+
+bone()
+pcolor(som.distance_map().T) # Take the transpose of the Mean Interneuron Distances (MID)
+colorbar() # Add a Legend
+markers = ['o', 's'] # Add markers to identify those that were approved / not approved
+colors = ['r', 'g'] # Add colors to identify those that were approved / not approved
+for i, j  in enumerate(x):
+    w = som.winner(x) # Identify the winning node
+    plot(w[0] + 0.5,
+         w[1] + 0.5,
+         markers[y[i]],
+         colors[y[i]]) # Add the marker to the center of the square of the winning node
+    
