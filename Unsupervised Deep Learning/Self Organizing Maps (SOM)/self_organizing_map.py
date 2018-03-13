@@ -106,5 +106,5 @@ show()
 
 # Identify the potentially fraudulent applications
 mappings = som.win_map(x) # Create a dictionary of mappings
-potential_fraud = mappings[(4, 4)] # Select the matrix locations for fraud from visualization above (all the white squares)
+potential_fraud = mappings[(4, 4)] # Select the matrix locations for potential fraud from visualization above (all the white squares)
 potential_fraud = sc.inverse_transform(potential_fraud)
