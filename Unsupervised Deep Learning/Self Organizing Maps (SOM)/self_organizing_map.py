@@ -60,7 +60,7 @@ x = sc.fit_transform(x)
 
 # Train the Self Organizing Map (SOM) Model
 
-# Steps to Train a Self Organizing Map
+# Steps to Train a Self Organizing Map (SOM)
 # Step 1: Start with a dataset composed of n_features independent variables
 # Step 2: Create a grid composed of nodes, each having a weight vector of n_features elements
 # Step 3: Randomly initialize the values of the weight vectors to small numbers close to 0 (but not 0)
@@ -75,11 +75,15 @@ x = sc.fit_transform(x)
 from minisom import MiniSom
 som = MiniSom(x = 10, 
               y = 10,
-              input_len = len(x) + len(y),
+              input_len = 15,
               sigma = 1.0,
               learning_rate = 0.5,
               decay_function = None,
               neighborhood_function = 'gaussian',
               random_seed = None)
+som.random_weights_init(x)
+som.train_random(data = x,
+                 num_iteration = 100)
 
-
+# Visualize the results to identify the outlying neurons in the Self Organizing Map (SOM)
+plt.plot()
