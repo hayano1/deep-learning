@@ -49,3 +49,13 @@ msno.bar(dataset)
 msno.heatmap(dataset)
 msno.dendrogram(dataset)
 
+# Separate dependent and independent variables (ensure dependent variable is the final column in the dataset)
+x = dataset.iloc[:, :-1].values
+y = dataset.iloc[:, -1].values
+
+# Scale Features
+from sklearn.preprocessing import MinMaxScaler # Normalization scaling
+sc = MinMaxScaler(feature_range = (0,1))
+x = sc.fit_transform(x)
+
+# Train the Self Organizing Map (SOM) Model
