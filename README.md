@@ -2,7 +2,7 @@
 
 ## Modeling Types
 
-| Model | R Code | Python Code |
+| Model |  |  |
 | ---------------------------------------- | :---:  | :---: |
 | Supervised |   |   | 
 | Unsupervised |   |   | 
