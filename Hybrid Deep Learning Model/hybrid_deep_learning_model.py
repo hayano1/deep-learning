@@ -187,3 +187,4 @@ os.system('say "your model has finished"')
 # Predict the probability of fraud
 y_pred = classifier.predict(customers)
 y_pred = np.concatenate((dataset.iloc[:, 0:1].values, y_pred), axis = 1)
+y_pred = y_pred[y_pred[:, 1].argsort()] # Sort the probability of fraud from lowest to highest
