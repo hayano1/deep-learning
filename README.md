@@ -2,7 +2,7 @@
 
 ## Deep Learning Modeling Types
 
-| Model Type |  Model Name |  Usage |
+| Model Type |  Model Name | General Usage |
 | ---------------------------------------- | :---  | :--- |
 | Supervised | Artificial Neural Network (ANN) | Used for Regression & Classification | 
 | Supervised | Convolutional Neural Network (CNN) | Used for Computer Vision |
