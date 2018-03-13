@@ -102,4 +102,4 @@ for i, j  in enumerate(x):
          markerfacecolor = 'None',
          markersize = 10,
          markeredgewidth = 2) # Add the marker to the center of the square of the winning node
-    
+show()
