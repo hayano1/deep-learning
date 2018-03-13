@@ -92,7 +92,7 @@ bone()
 pcolor(som.distance_map().T) # Take the transpose of the Mean Interneuron Distances (MID)
 colorbar() # Add a Legend
 markers = ['o', 's'] # Add markers to identify those that were approved / not approved
-colors = ['r', 'g'] # Add colors to identify those that were approved / not approved
+colors = ['r', 'b'] # Add colors to identify those that were approved / not approved
 for i, j  in enumerate(x):
     w = som.winner(j) # Identify the winning node
     plot(w[0] + 0.5,
@@ -106,5 +106,5 @@ show()
 
 # Identify the potentially fraudulent applications
 mappings = som.win_map(x) # Create a dictionary of mappings
-fraud = mappings[(4, 4)] # Select the matrix locations for fraud from visualization above (all the white squares)
-
+potential_fraud = mappings[(4, 4)] # Select the matrix locations for fraud from visualization above (all the white squares)
+potential_fraud = sc.inverse_transform(potential_fraud)
