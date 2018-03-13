@@ -1,6 +1,6 @@
 # deep-learning
 
-## Modeling Types
+## Deep Learning Modeling Types
 
 | Model |  |  |
 | ---------------------------------------- | :---:  | :---: |
