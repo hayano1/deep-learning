@@ -32,6 +32,14 @@ list(dataset)
 # Identify column datatypes
 dataset.dtypes
 
+# Identify missing data (basic)
+pd.isnull(dataset)
+
+# Identify correlation between numerical variables
+dataset.corr() # Pearson correlation
+dataset.corr('kendall') # Kendall Tau correlation
+dataset.corr('spearman') # Spearman Rank correlation
+
 # Identify missing data
 # pip install missingno
 import missingno as msno # Provides a library of data missingness functions 
