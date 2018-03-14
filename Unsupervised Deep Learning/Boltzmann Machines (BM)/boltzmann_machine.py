@@ -35,59 +35,6 @@ ratings = pd.read_csv('ml-1m/ratings.dat',
                      engine = 'python',
                      encoding = 'latin-1')
 
-
-# Describe the dataset
-print(movies.describe().T)
-print(users.describe().T)
-print(ratings.describe().T)
-
-
-# Round values to 2 decimals
-print(np.round(movies.describe(), 2).T)
-print(np.round(users.describe(), 2).T)
-print(np.round(ratings.describe(), 2).T)
-
-# View the first 5 records
-movies.head(5)
-users.head(5)
-ratings.head(5)
-
-# View the last 5 records
-movies.tail(5)
-users.tail(5)
-ratings.tail(5)
-
-# Identify the columns
-list(movies)
-list(ratings)
-list(users)
-
-# Identify column datatypes
-movies.dtypes
-users.dtypes
-ratings.dtypes
-
-# Identify missing data (basic)
-pd.isnull(movies)
-pd.isnull(users)
-pd.isnull(ratings)
-
-'''
-# Identify correlation between numerical variables
-movies.corr() # Pearson correlation
-movies.corr('kendall') # Kendall Tau correlation
-movies.corr('spearman') # Spearman Rank correlation
-
-# Identify missing data
-# pip install missingno
-import missingno as msno # Provides a library of data missingness functions 
-#%matplotlib inline
-msno.matrix(movies)
-msno.bar(movies)
-msno.heatmap(movies)
-msno.dendrogram(movies)
-'''
-
 # Prepare the Training and Test sets
 training_set = pd.read_csv('ml-100k/u1.base',
                      delimiter = '\t')
@@ -103,3 +50,6 @@ test_set = np.array(test_set,
 nb_users = int(max(max(training_set[:, 0]), max(test_set[:, 0]))) # The maximum user ID in either the training or test set
 nb_movies = int(max(max(training_set[:, 1]), max(test_set[:, 1]))) # The maximum movie ID in either the training or test set
 
+# Convert the data into an array with users in lines and movies in columns
+def convert(data):
+    # create a list of lists
