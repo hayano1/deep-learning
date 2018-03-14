@@ -85,7 +85,19 @@ class RBM():
         self.W = torch.randn(nh, nv) # Weights set on a normal distribution of mean 0 and variance of 1
         self.a = torch.randn(1, nh) # Bias (a) for the hidden nodes of size of the number of hidden nodes and size of the batch (1)
         self.b = torch.randn(1, nv) # Bias (b) for the visible nodes of size of the number of visible nodes and size of the batch (1)
-    
+    def sample_h(self, x):
+        # Probability of h given v (sigmoid activation function)
+        wx = torch.mm(x, self.W.t()) # Product of the visible node and the matrix of weights
+        activation = wx + self.a.expand_as(wx) # Ensure the bias is applied to each line of the mini batch
+        p_h_given_v = torch.sigmoid(activation) # Vector of probabilities that each hidden node is activated given the value of the visible node
+        return p_h_given_v, torch.bernoulli(p_h_given_v)
+    def sample_v(self, x):
+        # Probability of v given h (sigmoid activation function)
+        wx = torch.mm(x, self.W.t()) # Product of the hidden node and the matrix of weights
+        activation = wx + self.b.expand_as(wx) # Ensure the bias is applied to each line of the mini batch
+        p_v_given_h = torch.sigmoid(activation) # Vector of probabilities that each visible node is activated given the value of the hidden node
+        return p_v_given_h, torch.bernoulli(p_v_given_h)
+
         
 
 
