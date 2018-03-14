@@ -8,5 +8,5 @@
 | Supervised | Convolutional Neural Network (CNN) | Computer Vision |
 | Supervised | Recurrent Neural Network (RNN) | Time Series Analysis  | 
 | Unsupervised | Self-Organizing Map (SOM) | Feature Detection |
-| Unsupervised | Boltzmann Machines | Recommender Systems |
-| Unsupervised | AutoEncoders | Recommender Systems |
+| Unsupervised | Boltzmann Machine | Recommender Systems |
+| Unsupervised | AutoEncoder | Recommender Systems |
