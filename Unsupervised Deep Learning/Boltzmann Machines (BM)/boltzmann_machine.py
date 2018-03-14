@@ -79,3 +79,14 @@ test_set[test_set == 1] = 0 # Set all movies rated 1 or 2 to 0
 test_set[test_set == 2] = 0 # Set all movies rated 1 or 2 to 0
 test_set[test_set >= 3] = 1 # Set all movies rated 3, 4, or 5 to 1
 
+# Create the architecture of the Neural Network (Restricted Boltzmann Machine (RBM))
+class RBM():
+    def __init__(self, nv, nh):
+        self.W = torch.randn(nh, nv) # Weights set on a normal distribution of mean 0 and variance of 1
+        self.a = torch.randn(1, nh) # Bias (a) for the hidden nodes of size of the number of hidden nodes and size of the batch (1)
+        self.b = torch.randn(1, nv) # Bias (b) for the visible nodes of size of the number of visible nodes and size of the batch (1)
+    
+        
+
+
+
