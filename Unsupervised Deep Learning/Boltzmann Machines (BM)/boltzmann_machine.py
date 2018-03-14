@@ -52,4 +52,9 @@ nb_movies = int(max(max(training_set[:, 1]), max(test_set[:, 1]))) # The maximum
 
 # Convert the data into an array with users in lines and movies in columns
 def convert(data):
-    # create a list of lists
+    new_data = [] # create a list of lists
+    for id_users in range(1, nb_users + 1):
+        id_movies = data[:, 1][data[:, 0] == id_users]
+        id_ratings = data[:, 2][data[:, 0] == id_users]
+        ratings = np.zeros(nb_movies)
+        ratings[id_movies - 1]
