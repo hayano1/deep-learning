@@ -63,3 +63,5 @@ def convert(data):
 
 training_set = convert(training_set)
 test_set = convert(test_set)
+
+# Convert the data into Torch tensors
