@@ -57,4 +57,9 @@ def convert(data):
         id_movies = data[:, 1][data[:, 0] == id_users]
         id_ratings = data[:, 2][data[:, 0] == id_users]
         ratings = np.zeros(nb_movies)
-        ratings[id_movies - 1]
+        ratings[id_movies - 1] = id_ratings # for each user, add the ratings for all movies
+        new_data.append(list(ratings))
+    return new_data
+
+training_set = convert(training_set)
+test_set = convert(test_set)
