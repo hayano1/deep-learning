@@ -14,3 +14,4 @@
 ### Artificial Neural Networks (ANN)
 
 ![ANN](/Images/ANN1.png?raw=true "Artificial Neural Network (ANN)")
+![Threshold Activation Function](/Images/threshold_function.png?raw=true "Threshold Activation Function")
