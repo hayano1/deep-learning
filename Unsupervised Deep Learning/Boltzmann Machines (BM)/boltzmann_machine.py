@@ -91,12 +91,17 @@ class RBM():
         activation = wx + self.a.expand_as(wx) # Ensure the bias is applied to each line of the mini batch
         p_h_given_v = torch.sigmoid(activation) # Vector of probabilities that each hidden node is activated given the value of the visible node
         return p_h_given_v, torch.bernoulli(p_h_given_v)
-    def sample_v(self, x):
+    def sample_v(self, y):
         # Probability of v given h (sigmoid activation function)
-        wx = torch.mm(x, self.W.t()) # Product of the hidden node and the matrix of weights
-        activation = wx + self.b.expand_as(wx) # Ensure the bias is applied to each line of the mini batch
+        wy = torch.mm(y, self.W) # Product of the hidden node and the matrix of weights
+        activation = wy + self.b.expand_as(wy) # Ensure the bias is applied to each line of the mini batch
         p_v_given_h = torch.sigmoid(activation) # Vector of probabilities that each visible node is activated given the value of the hidden node
         return p_v_given_h, torch.bernoulli(p_v_given_h)
+    def train(self, v0, vk, ph0, phk): # Implementation of k-step contrastive divergence
+        self.W += torch.mm(v0.t(), ph0) - torch.mm(vk.t(), phk)
+        self.b += torch.sum((v0 - vk), 0) # Keep format of b as a tensor with 2 dimensions
+        self.a += torch.sum((ph0 - phk), 0) # Keep format of a as a tensor with 2 dimensions
+        
 
         
 
