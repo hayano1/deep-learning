@@ -141,3 +141,16 @@ print(0.1 * round((end - start) / 6))
 # Add an end of work message
 import os
 os.system('say "your model has finished training"')
+
+# Test the RBM Model
+test_loss = 0
+s = 0. # Counter (float)
+for id_user in range(nb_users):
+    v = training_set[id_user:id_user + 1] # Need to keep training_set here as it is the input required to activate the hidden neurons
+    vt = test_set[id_user:id_user + 1]
+    if len(vt[vt >= 0]) > 0: # Filter out non-existant ratings 
+        _,h = rbm.sample_h(v) # Returns the second element
+        _,v = rbm.sample_v(h) # Update vk
+        test_loss += torch.mean(torch.abs(vt[vt >= 0] - v[vt >= 0])) # Update the train loss based on existant ratings
+        s += 1. # Increment the counter
+print('test loss: ' + str(test_loss / s))
