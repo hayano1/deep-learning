@@ -13,4 +13,4 @@
 
 ### Artificial Neural Networks (ANN)
 
-![ANN](/Images/ANN1.png?raw=true "Title")
+![ANN](/Images/ANN1.png?raw=true "Artificial Neural Network (ANN)" | width=100)
