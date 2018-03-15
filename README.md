@@ -10,3 +10,7 @@
 | Unsupervised | Self-Organizing Map (SOM) | Feature Detection |
 | Unsupervised | Boltzmann Machine | Recommender Systems |
 | Unsupervised | AutoEncoder | Recommender Systems |
+
+### Artificial Neural Networks (ANN)
+
+![ANN](/Images/ANN1.png?raw=true "Title")
