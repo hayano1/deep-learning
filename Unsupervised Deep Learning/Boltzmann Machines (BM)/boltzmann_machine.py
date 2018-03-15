@@ -101,9 +101,43 @@ class RBM():
         self.W += torch.mm(v0.t(), ph0) - torch.mm(vk.t(), phk)
         self.b += torch.sum((v0 - vk), 0) # Keep format of b as a tensor with 2 dimensions
         self.a += torch.sum((ph0 - phk), 0) # Keep format of a as a tensor with 2 dimensions
-        
+   
+# Set RBM Model input parameters     
+nv = len(training_set[0])
+nh = 100 # Adjust with tunning / experience
+batch_size = 100 # Batch size (1 is Online or Reinforcement Learning)
 
-        
+# Instantiate the RBM model
+rbm = RBM(nv, nh) 
 
+# Add a timer
+from timeit import default_timer as timer
+start = timer()
 
+# Train the RBM Model
+nb_epoch = 10 
+for epoch in range(1, nb_epoch + 1):
+    train_loss = 0
+    s = 0. # Counter (float)
+    for id_user in range(0, nb_users - batch_size, batch_size):
+        vk = training_set[id_user:id_user + batch_size] # Input batch vk 
+        v0 = training_set[id_user:id_user + batch_size]
+        ph0,_ = rbm.sample_h(v0) # Returns the first element of the sample_h function to initialize probabilities is based on the ratings already given by the users
+        for k in range(10):
+            _,hk = rbm.sample_h(vk) # Returns the second element
+            _,vk = rbm.sample_v(hk) # Update vk
+            vk[v0 < 0] = v0[v0 < 0]
+        phk,_ = rbm.sample_h(vk)
+        rbm.train(v0, vk, ph0, phk) # Update the weights
+        train_loss += torch.mean(torch.abs(v0[v0 >= 0] - vk[v0 >= 0])) # Update the train loss based on existant ratings
+        s += 1. # Increment the counter
+    print('epoch: ' + str(epoch) + ' loss: ' + str(train_loss / s))
 
+# Elapsed time in minutes
+end = timer()
+print('Elapsed time in minutes: ')
+print(0.1 * round((end - start) / 6))
+
+# Add an end of work message
+import os
+os.system('say "your model has finished processing"')
