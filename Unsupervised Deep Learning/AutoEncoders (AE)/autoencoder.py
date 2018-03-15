@@ -6,7 +6,6 @@ Created on Thu Mar 15 11:35:24 2018
 @author: ngilmore
 """
 
-
 # Deep Learning: AutoEncoder in Python
 
 # Import needed libraries
@@ -85,7 +84,7 @@ class SAE(nn.Module): # Create child class of torch.nn.Module class
         x = self.fc4(x) # Output vector
         return x # Vector of predicted ratings
 
-# Instantiate the SAE model
+# Instantiate the Stacked AutoEncoder (SAE) Model
 sae = SAE()
 criterion = nn.MSELoss() # Mean Squared Error
 optimizer = optim.RMSprop(sae.parameters(), lr = 0.01, weight_decay = 0.5) # Use Stochastic Gradient Descent to update the different weights to reduce the error at each epoch (Adam, RMSprop)
@@ -94,8 +93,25 @@ optimizer = optim.RMSprop(sae.parameters(), lr = 0.01, weight_decay = 0.5) # Use
 from timeit import default_timer as timer
 start = timer()
 
-# Train the AutoEncoder Model
-
+# Train the Stacked AutoEncoder (SAE) Model
+nb_epoch = 100
+for epoch in range(1, nb_epoch + 1):
+    train_loss = 0
+    s = 0. # Counter (float) of number of users who provided a rating
+    for id_user in range(nb_users):
+        input = Variable(training_set[id_user]).unsqueeze(0) # Creates Input Batch required by PyTorch
+        target = input.clone()
+        if torch.sum(target.data > 0) > 0: # Only look at users with at least one rating
+            output = sae(input) # Instantiates forward() function and outputs a vector of predicted ratings
+            target.require_grad = False # Apply stochastic gradient descent only to the inputs not the target to optimize the code
+            output[target == 0] = 0 # Take the same indexes as the input vector so that non-ratings will not count to optimize the code
+            loss = criterion(output, target)
+            mean_corrector = nb_movies / float(torch.sum(target.data > 0) + 1e-10) # Average of the error for movies that were rated (1-5) and add 1e-10 to ensure non-NULL denominator
+            loss.backward() # Determines which direction to adjust the weights up or down
+            train_loss += np.sqrt(loss.data[0] * mean_corrector)
+            s += 1.
+            optimizer.step()
+    print('epoch: ' + str(epoch) + ' loss: ' + str(train_loss))
 
 # Elapsed time in minutes
 end = timer()
