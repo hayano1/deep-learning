@@ -140,4 +140,4 @@ print(0.1 * round((end - start) / 6))
 
 # Add an end of work message
 import os
-os.system('say "your model has finished processing"')
+os.system('say "your model has finished training"')
