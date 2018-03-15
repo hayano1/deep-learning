@@ -111,7 +111,7 @@ for epoch in range(1, nb_epoch + 1):
             train_loss += np.sqrt(loss.data[0] * mean_corrector)
             s += 1.
             optimizer.step()
-    print('epoch: ' + str(epoch) + ' loss: ' + str(train_loss))
+    print('epoch: ' + str(epoch) + ' loss: ' + str(train_loss / s))
 
 # Elapsed time in minutes
 end = timer()
