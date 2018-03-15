@@ -86,7 +86,7 @@ class SAE(nn.Module): # Create child class of torch.nn.Module class
 
 # Instantiate the Stacked AutoEncoder (SAE) Model
 sae = SAE()
-criterion = nn.MSELoss() # Mean Squared Error
+criterion = nn.MSELoss() # Mean Squared Error (MSE)
 optimizer = optim.RMSprop(sae.parameters(), lr = 0.01, weight_decay = 0.5) # Use Stochastic Gradient Descent to update the different weights to reduce the error at each epoch (Adam, RMSprop)
 
 # Add a timer
@@ -94,7 +94,7 @@ from timeit import default_timer as timer
 start = timer()
 
 # Train the Stacked AutoEncoder (SAE) Model
-nb_epoch = 100
+nb_epoch = 200
 for epoch in range(1, nb_epoch + 1):
     train_loss = 0
     s = 0. # Counter (float) of number of users who provided a rating
@@ -111,7 +111,7 @@ for epoch in range(1, nb_epoch + 1):
             train_loss += np.sqrt(loss.data[0] * mean_corrector)
             s += 1.
             optimizer.step()
-    print('epoch: ' + str(epoch) + ' loss: ' + str(train_loss / s))
+    print('epoch: ' + str(epoch) + ' training loss: ' + str(train_loss / s))
 
 # Elapsed time in minutes
 end = timer()
@@ -122,4 +122,18 @@ print(0.1 * round((end - start) / 6))
 import os
 os.system('say "your model has finished training"')
 
-# Test the AutoEncoder Model
+# Test the Stacked AutoEncoder (SAE) Model
+test_loss = 0
+s = 0. # Counter (float) of number of users who provided a rating
+for id_user in range(nb_users):
+    input = Variable(training_set[id_user]).unsqueeze(0) # The training_set is the input to the test_set
+    target = Variable(test_set[id_user])
+    if torch.sum(target.data > 0) > 0:
+        output = sae(input) 
+        target.require_grad = False 
+        output[target == 0] = 0 
+        loss = criterion(output, target)
+        mean_corrector = nb_movies / float(torch.sum(target.data > 0) + 1e-10) 
+        test_loss += np.sqrt(loss.data[0] * mean_corrector)
+        s += 1.
+print('test loss: ' + str(test_loss / s))
