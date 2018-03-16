@@ -19,6 +19,9 @@
 
 ![Simple ANN](/Images/simple_ANN.png?raw=true "Simple ANN")
 ![Summary of ANN](/Images/summary_of_ANN.png?raw=true "Summary of ANN")
+
+### Activation Functions
+
 ![Threshold Activation Function](/Images/threshold_function.png?raw=true "Threshold Activation Function")
 ![Rectifier Activation Function](/Images/rectifier_function.png?raw=true "Rectifier Activation Function")
 
