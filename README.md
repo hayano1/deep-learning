@@ -11,9 +11,12 @@
 | Unsupervised | Boltzmann Machine | Recommender Systems |
 | Unsupervised | AutoEncoder | Recommender Systems |
 
-### Artificial Neural Networks (ANN)
+### Multiple Linear Regression
 
 ![Basis of ANN](/Images/basis_of_ANN.png?raw=true "Basis of Artificial Neural Networks (ANN)")
+
+### Artificial Neural Networks (ANN)
+
 ![Simple ANN](/Images/simple_ANN.png?raw=true "Simple ANN")
 ![Summary of ANN](/Images/summary_of_ANN.png?raw=true "Summary of ANN")
 ![Threshold Activation Function](/Images/threshold_function.png?raw=true "Threshold Activation Function")
