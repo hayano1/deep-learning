@@ -24,4 +24,5 @@
 
 ![Threshold Activation Function](/Images/threshold_function.png?raw=true "Threshold Activation Function")
 ![Rectifier Activation Function](/Images/rectifier_function.png?raw=true "Rectifier Activation Function")
-
+![Sigmoid Activation Function](/Images/sigmoid_function.png?raw=true "Sigmoid Activation Function")
+![Hyperbolic Tangent Activation Function](/Images/hyperbolic_tangent_function.png?raw=true "Hyperbolic Tangent Activation Function")
