@@ -50,6 +50,8 @@ for conversation in conversations[: -1]:
     _conversation = conversation.split(' +++$+++ ')[-1][1:-1].replace("'", "").replace(" ", "") # split the dataset and remove the square brackets, the quotes, and spaces
     conversations_ids.append(_conversation.split(','))
 
+# Separate questions and answers
+    
 
 ########## PART 2: BUILD THE SEQ2SEQ MODEL ##########
 ########## PART 3: TRAIN THE SEQ2SEQ MODEL ##########
