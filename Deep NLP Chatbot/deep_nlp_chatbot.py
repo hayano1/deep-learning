@@ -23,6 +23,10 @@ Created on Wed Mar 21 07:24:15 2018
 # Applications on --> chatbot
 # Launch Spyder from here
 
+%%time
+print('hello')
+
+
 # Part 1: Data Preprocessing
 # Part 2: Build the Seq2Seq Model
 # Part 3: Train the Seq2Seq Model
