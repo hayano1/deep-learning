@@ -51,6 +51,15 @@ for conversation in conversations[: -1]:
     conversations_ids.append(_conversation.split(','))
 
 # Separate questions and answers
+questions = []
+answers = []
+for conversation in conversations_ids:
+    for i in range(len(conversation) - 1):
+        questions.append(id2line[conversation[i]])
+        answers.append(id2line[conversation[i + 1]])
+
+# First stage cleaning of the text: case, punctuation...
+def clean_text(text):
     
 
 ########## PART 2: BUILD THE SEQ2SEQ MODEL ##########
