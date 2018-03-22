@@ -58,9 +58,50 @@ for conversation in conversations_ids:
         questions.append(id2line[conversation[i]])
         answers.append(id2line[conversation[i + 1]])
 
-# First stage cleaning of the text: case, punctuation...
+# First stage cleaning of the text: case, punctuation, and special characters
 def clean_text(text):
-    
+    text = text.lower()
+    text = re.sub(r"i'm", "i am", text)
+    text = re.sub(r"he's", "he is", text)
+    text = re.sub(r"she's", "she is", text)
+    text = re.sub(r"that's", "that is", text)
+    text = re.sub(r"what's", "what is", text)
+    text = re.sub(r"where's", "where is", text)
+    text = re.sub(r"\'ll", " will", text)
+    text = re.sub(r"\'ve", " have", text)
+    text = re.sub(r"\'re", " are", text)
+    text = re.sub(r"\'d", " would", text)
+    text = re.sub(r"won't", " will not", text)
+    text = re.sub(r"can't", " cannot", text)
+    text = re.sub(r"[-()\"#/@;:<>{}+=~|.?,]", "", text)
+    return text
+
+# Clean the questions
+clean_questions =[]
+for question in questions:
+    clean_questions.append(clean_text(question))
+
+# Clean the answers
+clean_answers = []
+for answer in answers:
+    clean_answers.append(clean_text(answer))  
+
+# Create a dictionary that maps each word to its number of occurrences
+word2count = {}
+for question in clean_questions:
+    for word in question.split():
+        if word not in word2count:
+            word2count[word] = 1
+        else:
+            word2count[word] += 1
+
+for answer in clean_answers:
+    for word in answer.split():
+        if word not in word2count:
+            word2count[word] = 1
+        else:
+            word2count[word] += 1
+
 
 ########## PART 2: BUILD THE SEQ2SEQ MODEL ##########
 ########## PART 3: TRAIN THE SEQ2SEQ MODEL ##########
