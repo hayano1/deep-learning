@@ -23,11 +23,34 @@ Created on Wed Mar 21 07:24:15 2018
 # Applications on --> chatbot
 # Launch Spyder from here
 
-%%time
-print('hello')
+########## PART 1: DATA PREPROCESSING ##########
+
+#%reset -f
+
+# Import required libraries
+import numpy as np
+import tensorflow as tf
+import re # Text cleaning library
+import time
+
+# Import the dataset
+lines = open('movie_lines.txt', encoding = 'utf-8', errors = 'ignore').read().split('\n')
+conversations = open('movie_conversations.txt', encoding = 'utf-8', errors = 'ignore').read().split('\n')
+
+# Create a dictionary mapping lines to ids
+id2line = {}
+for line in lines:
+    _line = line.split(' +++$+++ ')
+    if len(_line) == 5:
+        id2line[_line[0]] = _line[4]
+
+# Create a list of all conversations
+conversations_ids = []
+for conversation in conversations[: -1]:
+    _conversation = conversation.split(' +++$+++ ')[-1][1:-1].replace("'", "").replace(" ", "") # split the dataset and remove the square brackets, the quotes, and spaces
+    conversations_ids.append(_conversation.split(','))
 
 
-# Part 1: Data Preprocessing
-# Part 2: Build the Seq2Seq Model
-# Part 3: Train the Seq2Seq Model
-# Part 4: Test the Seq2Seq Model
+########## PART 2: BUILD THE SEQ2SEQ MODEL ##########
+########## PART 3: TRAIN THE SEQ2SEQ MODEL ##########
+########## PART 4: TEST THE SEQ2SEQ MODEL ##########
