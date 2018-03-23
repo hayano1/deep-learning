@@ -118,6 +118,20 @@ for word, count in word2count.items():
         answerswords2int[word] = word_number
         word_number += 1
 
+# Add the last tokens to these two dictionaries
+tokens = ['<PAD>', '<EOS>', '<OUT>', '<SOS>']
+for token in tokens:
+    questionswords2int[token] = len(questionswords2int) + 1
+
+for token in tokens:
+    answerswords2int[token] = len(answerswords2int) + 1
+
+# Create the inverse dictionary of the answerswords2int dictionary
+answersints2word = {w_i: w for w, w_i in answerswords2int.items()}
+
+# Add the EOS token to the end of every answer
+for i in range(len(clean_answers)):
+    clean_answers[i] += ' <EOS>' 
 
 ########## PART 2: BUILD THE SEQ2SEQ MODEL ##########
 ########## PART 3: TRAIN THE SEQ2SEQ MODEL ##########
