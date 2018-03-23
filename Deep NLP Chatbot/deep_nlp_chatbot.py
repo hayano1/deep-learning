@@ -102,6 +102,22 @@ for answer in clean_answers:
         else:
             word2count[word] += 1
 
+# Create two dictionaries that map the question words and the answer words to a unique integer (tokenization and filtering)
+threshold = 20 # ~5% of the max count
+questionswords2int = {}
+word_number = 0
+for word, count in word2count.items():
+    if count >= threshold:
+        questionswords2int[word] = word_number
+        word_number += 1
+
+answerswords2int = {}
+word_number = 0
+for word, count in word2count.items():
+    if count >= threshold:
+        answerswords2int[word] = word_number
+        word_number += 1
+
 
 ########## PART 2: BUILD THE SEQ2SEQ MODEL ##########
 ########## PART 3: TRAIN THE SEQ2SEQ MODEL ##########
