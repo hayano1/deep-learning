@@ -291,4 +291,18 @@ def seq2seq_model(inputs, targets, keep_prob, batch_size, sequence_length, answe
 
 
 ########## PART 3: TRAIN THE SEQ2SEQ MODEL ##########
+    
+# Set the hyperparameters
+epochs = 100
+batch_size = 64
+rnn_size = 512
+num_layers = 3
+encoding_embedding_size = 512 # Number of columns in encoder
+decoding_embedding_size = 512 # Number of columns in decoder
+learning_rate = 0.01
+learning_rate_decay = 0.9
+min_learning_rate = 0.0001
+keep_probability = 0.50 # Dropout rate recommended by Geoffrey Hinton p.1933 of JMLRdropout.pdf
+
+
 ########## PART 4: TEST THE SEQ2SEQ MODEL ##########
