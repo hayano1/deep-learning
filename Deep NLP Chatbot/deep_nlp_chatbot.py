@@ -232,7 +232,7 @@ def decode_test_set(encoder_state, decoder_cell, decoder_embeddings_matrix, sos_
     return test_predictions
 
 # Create the Decoder RNN Layer
-def decoder_rnn(decoder_embedded_input, decoder_embeddings_matrix, encoder_state, num_words, sequence_length, rnn_size, num_layers, word2int, keep_prob, batch_size):
+def decoder_rnn_layer(decoder_embedded_input, decoder_embeddings_matrix, encoder_state, num_words, sequence_length, rnn_size, num_layers, word2int, keep_prob, batch_size):
     with tf.variable_scope('decoding') as decoding_scope:
         lstm = tf.contrib.rnn.BasicLSTMCell(rnn_size)
         lstm_dropout = tf.contrib.rnn.DropoutWrapper(lstm, input_keep_prob = keep_prob)
@@ -269,7 +269,26 @@ def decoder_rnn(decoder_embedded_input, decoder_embeddings_matrix, encoder_state
 
 # Build the SEQ2SEQ Model
 def seq2seq_model(inputs, targets, keep_prob, batch_size, sequence_length, answers_num_words, questions_num_words, encoder_embedding_size, decoder_embedding_size, rnn_size, num_layers, questionswords2int):
-    
+    encoder_embedded_input = tf.contrib.layers.embed_sequence(inputs,
+                                                              answers_num_words + 1,
+                                                              encoder_embedding_size,
+                                                              initializer = tf.random_uniform_initializer(0, 1))
+    encoder_state = encoder_rnn_layer(encoder_embedded_input, rnn_size, num_layers, keep_prob, sequence_length)
+    preprocessed_targets = preprocess_targets(targets, questionswords2int, batch_size)
+    decoder_embeddings_matrix = tf.Variable(tf.random_uniform([questions_num_words + 1, decoder_embedding_size], 0, 1))
+    decoder_embedded_input = tf.nn.embedding_lookup(decoder_embeddings_matrix, preprocessed_targets)
+    training_predictions, test_predictions = decoder_rnn_layer(decoder_embedded_input,
+                                                               decoder_embeddings_matrix,
+                                                               encoder_state,
+                                                               questions_num_words,
+                                                               sequence_length,
+                                                               rnn_size,
+                                                               num_layers,
+                                                               questionswords2int,
+                                                               keep_prob,
+                                                               batch_size)
+    return training_predictions, test_predictions
+
 
 ########## PART 3: TRAIN THE SEQ2SEQ MODEL ##########
 ########## PART 4: TEST THE SEQ2SEQ MODEL ##########
