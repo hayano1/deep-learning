@@ -131,7 +131,33 @@ answersints2word = {w_i: w for w, w_i in answerswords2int.items()}
 
 # Add the EOS token to the end of every answer
 for i in range(len(clean_answers)):
-    clean_answers[i] += ' <EOS>' 
+    clean_answers[i] += ' <EOS>'
+
+# Translate all questions and answers into integers and replace all the words that were wiltered out with <OUT>
+questions_into_int = []
+for question in clean_questions:
+    ints = []
+    for word in question.split():
+        if word not in questionswords2int:
+            ints.append(questionswords2int['<OUT>'])
+        else:
+            ints.append(questionswords2int[word])
+    questions_into_int.append(ints)
+
+answers_into_int = []
+for answer in clean_answers:
+    ints = []
+    for word in answer.split():
+        if word not in answerswords2int:
+            ints.append(answerswords2int['<OUT>'])
+        else:
+            ints.append(answerswords2int[word])
+    answers_into_int.append(ints)
+    
+# Sort questions and answers by the length of the questions to speed up the training
+sorted_clean_questions = []
+sorted_clean_anwers = []
+for 
 
 ########## PART 2: BUILD THE SEQ2SEQ MODEL ##########
 ########## PART 3: TRAIN THE SEQ2SEQ MODEL ##########
