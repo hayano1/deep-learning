@@ -192,6 +192,17 @@ def encoder_rnn_layer(rnn_inputs, rnn_size, num_layers, keep_prob, sequence_leng
                                                        dtype = tf.float32) # Dynamic version of bidirectional rnn. Ensure input size of forward and backward cells are the same size
     return encoder_state
 
+# Decode the training set
+def decode_training_set(encoder_state, decoder_cell, decoder_embedded_input, sequence_length, decoding_scope, output_function, keep_prob, batch_size):
+    attention_state = tf.zeros([batch_size, 1, decoder_cell.output_size])
+    attention_keys, attention_values, attention_score_function, attention_construct_function = tf.contrib.seq2seq.prepare_attention(attention_states, attention_option = 'bahdanau', num_units = decoder_cell.output_size)
+    training_decoder_function = tf.contrib.seq2seq.attention_decoder_fn_train(encoder_state[0], 
+                                                                              attention_keys,
+                                                                              attention_values,
+                                                                              attention_score_function,
+                                                                              attention_construct_function,
+                                                                              name = 'attn_dec_train')
+
 
 
 ########## PART 3: TRAIN THE SEQ2SEQ MODEL ##########
