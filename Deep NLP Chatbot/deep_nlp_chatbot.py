@@ -157,7 +157,11 @@ for answer in clean_answers:
 # Sort questions and answers by the length of the questions to speed up the training
 sorted_clean_questions = []
 sorted_clean_anwers = []
-for 
+for length in range(1, 25 + 1):
+    for i in eumerate(questions_into_int): # enumerate the questions_into_int list 
+        if len(i[1]) == length:
+            sorted_clean_questions.append(questions_into_int[i[0]])
+            sorted_clean_answers.append(answers_into_int[i[0]])
 
 ########## PART 2: BUILD THE SEQ2SEQ MODEL ##########
 ########## PART 3: TRAIN THE SEQ2SEQ MODEL ##########
