@@ -185,8 +185,14 @@ def encoder_rnn_layer(rnn_inputs, rnn_size, num_layers, keep_prob, sequence_leng
     lstm = tf.contrib.rnn.BasicLSTMCell(rnn_size)
     lstm_dropout = tf.contrib.rnn.DropoutWrapper(lstm, input_keep_prob = keep_prob)
     encoder_cell = tf.contrib.rnn.MultiRNNCell([lstm_dropout] * num_layers)
-    _, encoder_state = tf.nn.bidirectional_dynamic_rnn(cell_fw = encoder_cell, cell_bw = encoder_cell) # Dynamic version of bidirectional rnn. Ensure input size of forward and backward cells are the same size
-    
+    _, encoder_state = tf.nn.bidirectional_dynamic_rnn(cell_fw = encoder_cell, 
+                                                       cell_bw = encoder_cell,
+                                                       sequence_length = sequence_length,
+                                                       inputs = rnn_inputs,
+                                                       dtype = tf.float32) # Dynamic version of bidirectional rnn. Ensure input size of forward and backward cells are the same size
+    return encoder_state
+
+
 
 ########## PART 3: TRAIN THE SEQ2SEQ MODEL ##########
 ########## PART 4: TEST THE SEQ2SEQ MODEL ##########
