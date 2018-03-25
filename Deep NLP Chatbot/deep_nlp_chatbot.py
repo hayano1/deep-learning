@@ -185,11 +185,11 @@ def encoder_rnn_layer(rnn_inputs, rnn_size, num_layers, keep_prob, sequence_leng
     lstm = tf.contrib.rnn.BasicLSTMCell(rnn_size)
     lstm_dropout = tf.contrib.rnn.DropoutWrapper(lstm, input_keep_prob = keep_prob)
     encoder_cell = tf.contrib.rnn.MultiRNNCell([lstm_dropout] * num_layers)
-    _, encoder_state = tf.nn.bidirectional_dynamic_rnn(cell_fw = encoder_cell, 
+    encoder_output, encoder_state = tf.nn.bidirectional_dynamic_rnn(cell_fw = encoder_cell, 
                                                        cell_bw = encoder_cell,
                                                        sequence_length = sequence_length,
                                                        inputs = rnn_inputs,
-                                                       dtype = tf.float32) # Dynamic version of bidirectional rnn. Ensure input size of forward and backward cells are the same size
+                                                       dtype = tf.float32) # Dynamic version of bidirectional rnn. Ensure input size of forward and backward cells are the same size (only encoder_state required)
     return encoder_state
 
 # Decode the training set
@@ -202,7 +202,15 @@ def decode_training_set(encoder_state, decoder_cell, decoder_embedded_input, seq
                                                                               attention_score_function,
                                                                               attention_construct_function,
                                                                               name = 'attn_dec_train')
+    decoder_output, decoder_final_state, decoder_final_context_state = tf.contrib.seq2seq.dynamic_rnn_decoder(decoder_cell,
+                                                                                                              training_decoder_function,
+                                                                                                              decoder_embedded_input,
+                                                                                                              sequence_length,
+                                                                                                              decoding_scope)
+    decoder_output_dropout = tf.nn.dropout(decoder_output, keep_prob)
+    return output_function(decoder_output_dropout)
 
+# Decode the test/validation set
 
 
 ########## PART 3: TRAIN THE SEQ2SEQ MODEL ##########
