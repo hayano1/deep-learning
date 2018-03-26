@@ -304,5 +304,13 @@ learning_rate_decay = 0.9
 min_learning_rate = 0.0001
 keep_probability = 0.50 # Dropout rate recommended by Geoffrey Hinton p.1933 of JMLRdropout.pdf
 
+# Define a session
+tf.reset_default_graph()
+session = tf.InteractiveSession()
+
+# Load the model inputs
+inputs, targets, lr, keep_prob = model_inputs()
+
+# 
 
 ########## PART 4: TEST THE SEQ2SEQ MODEL ##########
