@@ -314,4 +314,7 @@ inputs, targets, lr, keep_prob = model_inputs()
 # Set the sequence length
 sequence_length = tf.placeholder_with_default(25, None, name = 'sequence_length')
 
+# Set input shape of the inputs tensor
+
+
 ########## PART 4: TEST THE SEQ2SEQ MODEL ##########
