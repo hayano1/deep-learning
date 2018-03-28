@@ -159,7 +159,7 @@ for length in range(1, 25 + 1):
         if len(i[1]) == length:
             sorted_clean_questions.append(questions_into_int[i[0]])
             sorted_clean_answers.append(answers_into_int[i[0]])
-
+            
 ########## PART 2: BUILD THE SEQ2SEQ MODEL ##########
             
 # Create placeholders for the inputs and targets
@@ -170,11 +170,10 @@ def model_inputs():
     keep_prob = tf.placeholder(tf.float32, name = 'keep_prob') # Dropout Rate placeholder
     return inputs, targets, lr, keep_prob
 
-
 # Preprocess the targets
 def preprocess_targets(targets, word2int, batch_size):
     left_side = tf.fill([batch_size, 1], word2int['<SOS>'])
-    right_side = tf.strided_slice(targets, [0, 0], [batch_size, -1], [1, 1])
+    right_side = tf.strided_slice(targets, [0,0], [batch_size, -1], [1, 1])
     preprocessed_targets = tf.concat([left_side, right_side], 1)
     return preprocessed_targets
 
@@ -183,7 +182,7 @@ def encoder_rnn(rnn_inputs, rnn_size, num_layers, keep_prob, sequence_length):
     lstm = tf.contrib.rnn.BasicLSTMCell(rnn_size)
     lstm_dropout = tf.contrib.rnn.DropoutWrapper(lstm, input_keep_prob = keep_prob)
     encoder_cell = tf.contrib.rnn.MultiRNNCell([lstm_dropout] * num_layers)
-    encoder_output, encoder_state = tf.nn.bidirectional_dynamic_rnn(cell_fw = encoder_cell, 
+    encoder_output, encoder_state = tf.nn.bidirectional_dynamic_rnn(cell_fw = encoder_cell,
                                                                     cell_bw = encoder_cell,
                                                                     sequence_length = sequence_length,
                                                                     inputs = rnn_inputs,
@@ -291,15 +290,15 @@ def seq2seq_model(inputs, targets, keep_prob, batch_size, sequence_length, answe
     
 # Set the hyperparameters
 epochs = 100
-batch_size = 64
-rnn_size = 512
+batch_size = 32
+rnn_size = 1024
 num_layers = 3
-encoding_embedding_size = 512 # Number of columns in encoder
-decoding_embedding_size = 512 # Number of columns in decoder
-learning_rate = 0.01
+encoding_embedding_size = 1024 # Number of columns in encoder
+decoding_embedding_size = 1024 # Number of columns in decoder
+learning_rate = 0.001
 learning_rate_decay = 0.9
 min_learning_rate = 0.0001
-keep_probability = 0.50 # Dropout rate recommended by Geoffrey Hinton p.1933 of JMLRdropout.pdf
+keep_probability = 0.5 # Dropout rate recommended by Geoffrey Hinton p.1933 of JMLRdropout.pdf
 
 # Define a session
 tf.reset_default_graph()
@@ -309,34 +308,35 @@ session = tf.InteractiveSession()
 inputs, targets, lr, keep_prob = model_inputs()
 
 # Set the sequence length
-sequence_length = tf.placeholder_with_default(25, None, name = "sequence_length")
-
+sequence_length = tf.placeholder_with_default(25, None, name = 'sequence_length')
+ 
 # Set input shape of the inputs tensor
 input_shape = tf.shape(inputs)
 
-# Get the training and test predictions - ERRORS HERE
+# Get the training and test predictions
 training_predictions, test_predictions = seq2seq_model(tf.reverse(inputs, [-1]),
-                                                       targets, 
-                                                       keep_prob, 
-                                                       batch_size, 
-                                                       sequence_length, 
-                                                       len(answerswords2int), 
+                                                       targets,
+                                                       keep_prob,
+                                                       batch_size,
+                                                       sequence_length,
+                                                       len(answerswords2int),
                                                        len(questionswords2int),
-                                                       encoding_embedding_size, 
-                                                       decoding_embedding_size, 
-                                                       rnn_size, 
-                                                       num_layers, 
+                                                       encoding_embedding_size,
+                                                       decoding_embedding_size,
+                                                       rnn_size,
+                                                       num_layers,
                                                        questionswords2int)
 
 # Set up the Loss Error, the Optimizer and Gradient Clipping
 with tf.name_scope("optimization"):
-    loss_error = tf.contrib.seq2seq.sequence_loss(training_predictions, 
+    loss_error = tf.contrib.seq2seq.sequence_loss(training_predictions,
                                                   targets,
                                                   tf.ones([input_shape[0], sequence_length]))
     optimizer = tf.train.AdamOptimizer(learning_rate)
     gradients = optimizer.compute_gradients(loss_error)
-    clipped_gradients = [(tf.clip_by_value(grad_tensor, -5.0, 5.0), grad_variable) for grad_tensor, grad_variable in gradients if grad_tensor is not None]
+    clipped_gradients = [(tf.clip_by_value(grad_tensor, -5., 5.), grad_variable) for grad_tensor, grad_variable in gradients if grad_tensor is not None]
     optimizer_gradient_clipping = optimizer.apply_gradients(clipped_gradients)
+
 
 # Pad the sequences with the <PAD> token
 # Question: [ 'Who', 'are', 'you', '<PAD>', '<PAD>', '<PAD>', '<PAD>']
@@ -344,25 +344,122 @@ with tf.name_scope("optimization"):
 def apply_padding(batch_of_sequences, word2int):
     max_sequence_length = max([len(sequence) for sequence in batch_of_sequences])
     return [sequence + [word2int['<PAD>']] * (max_sequence_length - len(sequence)) for sequence in batch_of_sequences]
-
+ 
+    
 # Split the data into batches of questions and answers
 def split_into_batches(questions, answers, batch_size):
     for batch_index in range(0, len(questions) // batch_size):
         start_index = batch_index * batch_size
-        questions_in_batch = questions[start_index, start_index + batch_size]
-        answers_in_batch = answers[start_index, start_index + batch_size]
+        questions_in_batch = questions[start_index : start_index + batch_size]
+        answers_in_batch = answers[start_index : start_index + batch_size]
         padded_questions_in_batch = np.array(apply_padding(questions_in_batch, questionswords2int))
         padded_answers_in_batch = np.array(apply_padding(answers_in_batch, answerswords2int))
         yield padded_questions_in_batch, padded_answers_in_batch
-        
+
 # Split the questions and answers into training and validation sets
 training_validation_split = int(len(sorted_clean_questions) * 0.15)
-training_questions = sorted_clean_questions[training_validation_split: ]
-training_answers = sorted_clean_answers[training_validation_split: ]
-validation_questions = sorted_clean_questions[: training_validation_split]
-validation_answers = sorted_clean_answers[: training_validation_split]
+training_questions = sorted_clean_questions[training_validation_split:]
+training_answers = sorted_clean_answers[training_validation_split:]
+validation_questions = sorted_clean_questions[:training_validation_split]
+validation_answers = sorted_clean_answers[:training_validation_split]
 
+# Train the SEQ2SEQ Model
+batch_index_check_training_loss = 100
+batch_index_check_validation_loss = ((len(training_questions)) // batch_size // 2) - 1
+total_training_loss_error = 0
+list_validation_loss_error = []
+early_stopping_check = 0
+early_stopping_stop = 100
+checkpoint = "chatbot_weights.ckpt"
+session.run(tf.global_variables_initializer())
 
-
+for epoch in range(1, epochs + 1):
+    for batch_index, (padded_questions_in_batch, padded_answers_in_batch) in enumerate(split_into_batches(training_questions, training_answers, batch_size)):
+        starting_time = time.time()
+        _, batch_training_loss_error = session.run([optimizer_gradient_clipping, loss_error], {inputs: padded_questions_in_batch,
+                                                                                               targets: padded_answers_in_batch,
+                                                                                               lr: learning_rate,
+                                                                                               sequence_length: padded_answers_in_batch.shape[1],
+                                                                                               keep_prob: keep_probability})
+        total_training_loss_error += batch_training_loss_error
+        ending_time = time.time()
+        batch_time = ending_time - starting_time
+        if batch_index % batch_index_check_training_loss == 0:
+            print('Epoch:  {:>3}/{}, Batch: {:>4}/{}, Training Loss Error: {:>6.3f}, Training Time on 100 Batches: {:d} seconds'.format(epoch,
+                                                                                                                                        epochs,
+                                                                                                                                        batch_index,
+                                                                                                                                        len(training_questions) // batch_size,
+                                                                                                                                        total_training_loss_error / batch_index_check_training_loss,
+                                                                                                                                        int(batch_time * batch_index_check_training_loss)))
+            total_training_loss_error = 0
+        if batch_index % batch_index_check_validation_loss == 0 and batch_index > 0:
+            total_validation_loss_error = 0
+            starting_time = time.time()
+            for batch_index_validation, (padded_questions_in_batch, padded_answers_in_batch) in enumerate(split_into_batches(validation_questions, validation_answers, batch_size)):
+                batch_validation_loss_error = session.run(loss_error, {inputs: padded_questions_in_batch,
+                                                                       targets: padded_answers_in_batch,
+                                                                       lr: learning_rate,
+                                                                       sequence_length: padded_answers_in_batch.shape[1],
+                                                                       keep_prob: 1})
+                total_validation_loss_error += batch_validation_loss_error
+            ending_time = time.time()
+            batch_time = ending_time - starting_time
+            average_validation_loss_error = total_validation_loss_error / (len(validation_questions) / batch_size)
+            print('Validation Loss Error: {:>6.3f}, Batch Validation Time: {:d} seconds'.format(average_validation_loss_error, int(batch_time)))
+            learning_rate *= learning_rate_decay
+            if learning_rate < min_learning_rate:
+                learning_rate = min_learning_rate
+            list_validation_loss_error.append(average_validation_loss_error)
+            if average_validation_loss_error <= min(list_validation_loss_error):
+                print("I speak better now!!")
+                early_stopping_check = 0
+                saver = tf.train.Saver()
+                saver.save(session, checkpoint)
+            else:
+                print("Sorry, I do not speak better. I need to practice more.")
+                early_stopping_check += 1
+                if early_stopping_check == early_stopping_stop:
+                    break
+    if early_stopping_check == early_stopping_stop:
+        print("My apologies, I cannot speak any better. This is the best I can do.")
+        break
+print("Game Over!")
 
 ########## PART 4: TEST THE SEQ2SEQ MODEL ##########
+
+# Load the weights and Run the session
+checkpoint = "./chatbot_weights.ckpt"
+session = tf.InteractiveSession()
+session.run(tf.global_variables_initializer())
+saver = tf.train.Saver()
+saver.restore(session, checkpoint)
+
+# Convert the questions from strings to lists of encoding integers
+def convert_string2int(question, word2int):
+    question = clean_text(question)
+    return [word2int.get(word, word2int['<OUT>']) for word in question.split()]
+
+# Set up the chat
+while(True):
+    question = input("You: ")
+    if question == 'Goodbye':
+        break
+    question = convert_string2int(question, questionswords2int)
+    question = question + [questionswords2int['<PAD>']] * (20 - len(question))
+    fake_batch = np.zeros((batch_size, 20))
+    fake_batch[0] = question
+    predicted_answer = session.run(test_predictions, {inputs: fake_batch, keep_prob: 0.5})[0]
+    answer = ''
+    for i in np.argmax(predicted_answer, 1):
+        if answersints2word[i] == 'i':
+            token = 'I'
+        elif answerswords2int[i] == '<EOS>':
+            token = '.'
+        elif answerswords2int[i] == '<OUT>':
+            token = 'out'
+        else:
+            token = ' ' + answersints2word[i]
+        answer += token
+        if token == '.':
+            break
+    print('Chatbot: ' + answer)

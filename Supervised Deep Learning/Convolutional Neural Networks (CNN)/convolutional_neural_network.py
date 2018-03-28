@@ -33,6 +33,7 @@ from keras.layers import Convolution2D # Creates the convolutional layers
 from keras.layers import MaxPooling2D # Adds the pooling layers
 from keras.layers import Flatten # Adds the flattening layer
 from keras.layers import Dense # Builds the layers of the Neural Network
+from keras.layers import Dropout # Adds dropout
 
 # Add a timer
 from timeit import default_timer as timer
@@ -47,6 +48,7 @@ classifier.add(Convolution2D(32, (3, 3),
                              padding = 'same', 
                              input_shape = (128, 128, 3), 
                              activation = 'relu'))
+classifier.add(Dropout(p = 0.1))
 
 # Step 2: Apply Max Pooling to the CNN
 classifier.add(MaxPooling2D(pool_size = (2, 2)))
@@ -55,6 +57,7 @@ classifier.add(MaxPooling2D(pool_size = (2, 2)))
 classifier.add(Convolution2D(32, (3, 3), 
                              padding = 'same',
                              activation = 'relu'))
+classifier.add(Dropout(p = 0.1))
 
 # Apply Max Pooling to the 2nd Convolutional Layer
 classifier.add(MaxPooling2D(pool_size = (2, 2)))
@@ -63,6 +66,7 @@ classifier.add(MaxPooling2D(pool_size = (2, 2)))
 classifier.add(Convolution2D(64, (3, 3), 
                              padding = 'same',
                              activation = 'relu'))
+classifier.add(Dropout(p = 0.1))
 
 # Apply Max Pooling to the 3rd Convolutional Layer
 classifier.add(MaxPooling2D(pool_size = (2, 2)))
@@ -76,11 +80,13 @@ classifier.add(Flatten())
 classifier.add(Dense(units = 128, 
                      kernel_initializer = 'uniform', 
                      activation = 'relu')) # activation is the rectifier activation function for the hidden layers
+classifier.add(Dropout(p = 0.1))
 
 # Add a second Full Connection Hidden Layer to increase accuracy and performance results
-#classifier.add(Dense(units = 64, 
-#                     kernel_initializer = 'uniform', 
-#                     activation = 'relu')) # activation is the rectifier activation function for the hidden layers
+classifier.add(Dense(units = 128, 
+                     kernel_initializer = 'uniform', 
+                     activation = 'relu')) # activation is the rectifier activation function for the hidden layers
+classifier.add(Dropout(p = 0.1))
 
 # Add the Output Layer
 classifier.add(Dense(units = 1, 
@@ -114,6 +120,7 @@ test_set = test_datagen.flow_from_directory('cnn_dataset/test_set',
                                             batch_size = 32,
                                             class_mode = 'binary')
 
+batch_size = 32
 classifier.fit_generator(training_set,
                          steps_per_epoch = 8000 // batch_size,
                          epochs = 25,
